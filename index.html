@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>socioAI - Professional Networking Platform</title>
+    <meta name="description" content="Professional networking platform with gamified tasks, team building, and rewards system. Join millions of professionals building their network and earning rewards." />
+    <meta name="author" content="socioAI" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2979FF" />
+    <meta name="msapplication-navbutton-color" content="#2979FF" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="socioAI" />
+    
+    <!-- Prevent zoom on input focus and improve mobile experience -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    
+    <!-- iOS PWA Support -->
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="apple-touch-startup-image" href="/placeholder.svg" />
+    <link rel="apple-touch-icon" href="/placeholder.svg" />
+    
+    <!-- Additional PWA icons for iOS -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/placeholder.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/placeholder.svg" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/placeholder.svg" />
+
+    <!-- Google Fonts: Playfair Display & Inter -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="socioAI - Professional Networking Platform" />
+    <meta property="og:description" content="Professional networking platform with gamified tasks, team building, and rewards system." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://socialtrade.app" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+    <!-- Enhanced Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js', {
+            scope: '/'
+          })
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New content available, show update notification
+                  if (confirm('New version available! Refresh to update?')) {
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          })
+          .catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+        
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          console.log('Message from service worker:', event.data);
+        });
+      }
+
+      // Install prompt handling
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('beforeinstallprompt fired');
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      // Track install
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('App installed successfully');
+      });
+    </script>
+  </head>
+  <body class="dark">
+    <div id="root"></div>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/placeholder.svg" as="image" />
+    
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

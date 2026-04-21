@@ -1,0 +1,127 @@
+
+{
+  "name": "socioAI - Professional Networking Platform",
+  "short_name": "socioAI",
+  "description": "Professional networking platform with gamified tasks, team building, and rewards system. Join millions of professionals building their network and earning rewards.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2979FF",
+  "background_color": "#ffffff",
+  "scope": "/",
+  "id": "social-trade-app",
+  "icons": [
+    {
+      "src": "/placeholder.svg",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "152x152",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "192x192", 
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "384x384",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/placeholder.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "social", "networking", "productivity"],
+  "lang": "en",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Access your dashboard",
+      "url": "/dashboard",
+      "icons": [{ 
+        "src": "/placeholder.svg", 
+        "sizes": "96x96",
+        "type": "image/svg+xml"
+      }]
+    },
+    {
+      "name": "Tasks",
+      "short_name": "Tasks", 
+      "description": "View your tasks",
+      "url": "/dashboard/tasks",
+      "icons": [{ 
+        "src": "/placeholder.svg", 
+        "sizes": "96x96",
+        "type": "image/svg+xml"
+      }]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "Check your messages", 
+      "url": "/dashboard/messages",
+      "icons": [{ 
+        "src": "/placeholder.svg", 
+        "sizes": "96x96",
+        "type": "image/svg+xml"
+      }]
+    },
+    {
+      "name": "Profile",
+      "short_name": "Profile",
+      "description": "View your profile",
+      "url": "/dashboard/profile", 
+      "icons": [{ 
+        "src": "/placeholder.svg", 
+        "sizes": "96x96",
+        "type": "image/svg+xml"
+      }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/placeholder.svg",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/placeholder.svg", 
+      "sizes": "720x540",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ]
+}
