@@ -3,7 +3,7 @@ import React from "react";
 import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { CommissionLevelsStatus } from "./CommissionLevelsStatus";
+
 
 export const DashboardTeamSummary = ({
   direct,
@@ -33,8 +33,6 @@ export const DashboardTeamSummary = ({
     <div className="text-xs mb-1 text-muted-foreground">
       Referral ID: <span className="font-mono">{referral_user_id ?? "—"}</span>
     </div>
-    {/* Show commission levels status here */}
-    <CommissionLevelsStatus directs={direct} className="w-full mt-2" />
     <Button asChild variant="outline" size="sm" className="mt-2 w-full font-semibold shadow-sm">
       <Link to="/dashboard/team">More</Link>
     </Button>

@@ -63,12 +63,7 @@ import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
 
 // Dashboard routes for new sections
-import DashboardRankProgress from '@/components/dashboard/DashboardRankProgress';
-import DashboardRoyalty from '@/components/dashboard/DashboardRoyalty';
-import DashboardBalancedVolume from '@/components/dashboard/DashboardBalancedVolume';
 import DashboardCampaignAnalytics from '@/components/dashboard/DashboardCampaignAnalytics';
-import DashboardLeadership from '@/components/dashboard/DashboardLeadership';
-import DashboardPayouts from '@/components/dashboard/DashboardPayouts';
 
 // Layout components
 import UnifiedDashboardLayout from '@/components/dashboard/UnifiedDashboardLayout';
@@ -112,12 +107,7 @@ function App() {
                     <Route path="task-history" element={<DashboardTaskHistory />} />
                     <Route path="team" element={<DashboardTeam />} />
                     <Route path="points" element={<DashboardPoints />} />
-                    <Route path="rank-progress" element={<DashboardRankProgress />} />
-                    <Route path="royalty" element={<DashboardRoyalty />} />
-                    <Route path="balanced-volume" element={<DashboardBalancedVolume />} />
                     <Route path="campaign-analytics" element={<DashboardCampaignAnalytics />} />
-                    <Route path="leadership" element={<DashboardLeadership />} />
-                    <Route path="payouts" element={<DashboardPayouts />} />
                   </Route>
                   
                   {/* Public routes with layout */}

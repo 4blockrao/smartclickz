@@ -9,7 +9,7 @@ export default function Community() {
   const { data, isLoading } = useQuery({
     queryKey: ["community_topics"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("community_topics")
         .select("*")
         .order("trending", { ascending: false })

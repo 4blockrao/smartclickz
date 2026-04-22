@@ -10,7 +10,7 @@ export default function LiveCommunityPreview() {
   const { data, isLoading } = useQuery({
     queryKey: ["community-topics-home"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("community_topics")
         .select("id, title, author, replies, trending, created_at")
         .order("created_at", { ascending: false })

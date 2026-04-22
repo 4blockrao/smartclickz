@@ -54,7 +54,7 @@ class ErrorBoundary extends Component<Props, State> {
               <p className="text-muted-foreground text-center">
                 We encountered an unexpected error. Please try refreshing the page or contact support if the problem persists.
               </p>
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <div className="bg-red-50 border border-red-200 rounded-md p-3">
                   <p className="text-sm font-mono text-red-800 break-all">
                     {this.state.error.message}
