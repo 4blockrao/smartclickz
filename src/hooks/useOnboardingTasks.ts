@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import type { Database } from "@/integrations/supabase/types";
 
 // Onboarding task row and user completion row types
-type OnboardingTask = Database["public"]["Tables"]["onboarding_tasks"]["Row"];
+type OnboardingTask = any;
 type TaskCompletion = Database["public"]["Tables"]["user_onboarding_task_completions"]["Row"];
 
 export function useOnboardingTasks(userId?: string) {
@@ -13,7 +13,7 @@ export function useOnboardingTasks(userId?: string) {
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["onboarding-tasks"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("onboarding_tasks")
         .select("*")
         .eq("is_active", true)
