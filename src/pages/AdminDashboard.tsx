@@ -60,9 +60,9 @@ export default function AdminDashboard() {
     queryFn: async () => {
       const [usersRes, campaignsRes, tasksRes, transactionsRes] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact" }),
-        supabase.from("campaigns").select("id, status", { count: "exact" }),
+        (supabase as any).from("campaigns").select("id, status", { count: "exact" }),
         supabase.from("tasks").select("id", { count: "exact" }),
-        supabase.from("transactions").select("amount")
+        (supabase as any).from("transactions").select("amount")
       ]);
 
       return {
