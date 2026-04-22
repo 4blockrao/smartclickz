@@ -32,21 +32,20 @@ export function usePointsWallet(userId: string | undefined) {
   // Add real-time updates for points_ledger
   useEffect(() => {
     if (!userId) return;
-    const channel = supabase.channel("points-wallet-realtime")
+    const channel = supabase.channel(`points-wallet-${userId}`)
       .on(
-        "postgres_changes",
+        "postgres_changes" as any,
         {
-          event: "*", // Listen for INSERT, UPDATE, DELETE
+          event: "*",
           schema: "public",
           table: "points_ledger",
           filter: `user_id=eq.${userId}`,
         },
-        (_payload) => {
-          // Invalidate and refetch for real-time updates
+        () => {
           queryClient.invalidateQueries({ queryKey: ["points-ledger", userId] });
         }
-      )
-      .subscribe();
+      );
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
