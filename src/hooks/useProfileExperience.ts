@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { ProfileExperience, ProfileExperienceFormValues } from "@/schemas/profileSchema";
 import { useToast } from "@/hooks/use-toast";
 
+const sb = supabase as any;
+
 export const useProfileExperience = (profileId: string | undefined) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -17,7 +19,7 @@ export const useProfileExperience = (profileId: string | undefined) => {
     queryKey,
     queryFn: async () => {
       if (!profileId) return [];
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('profile_experience')
         .select('*')
         .eq('profile_id', profileId)
@@ -31,7 +33,6 @@ export const useProfileExperience = (profileId: string | undefined) => {
   const addExperienceMutation = useMutation({
     mutationFn: async (values: ProfileExperienceFormValues) => {
       if (!profileId) throw new Error("Profile ID is required.");
-
       const experienceDataToInsert = {
         profile_id: profileId,
         company_name: values.company_name,
@@ -42,10 +43,7 @@ export const useProfileExperience = (profileId: string | undefined) => {
         location: values.location ?? null,
         employment_type: values.employment_type ?? null,
       };
-
-      const { error } = await supabase
-        .from('profile_experience')
-        .insert([experienceDataToInsert]);
+      const { error } = await sb.from('profile_experience').insert([experienceDataToInsert]);
       if (error) throw error;
       return null;
     },
@@ -53,7 +51,7 @@ export const useProfileExperience = (profileId: string | undefined) => {
       toast({ title: 'Experience Added', description: 'New work experience has been saved.' });
       queryClient.invalidateQueries({ queryKey });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({ variant: 'destructive', title: 'Add Failed', description: error.message });
     },
   });
@@ -70,11 +68,7 @@ export const useProfileExperience = (profileId: string | undefined) => {
         employment_type: values.employment_type ?? null,
         updated_at: new Date().toISOString(),
       };
-
-      const { error } = await supabase
-        .from('profile_experience')
-        .update(experienceDataToUpdate)
-        .eq('id', id);
+      const { error } = await sb.from('profile_experience').update(experienceDataToUpdate).eq('id', id);
       if (error) throw error;
       return null;
     },
@@ -82,17 +76,14 @@ export const useProfileExperience = (profileId: string | undefined) => {
       toast({ title: 'Experience Updated', description: 'Work experience has been updated.' });
       queryClient.invalidateQueries({ queryKey });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({ variant: 'destructive', title: 'Update Failed', description: error.message });
     },
   });
 
   const deleteExperienceMutation = useMutation({
     mutationFn: async (experienceId: string) => {
-      const { error } = await supabase
-        .from('profile_experience')
-        .delete()
-        .eq('id', experienceId);
+      const { error } = await sb.from('profile_experience').delete().eq('id', experienceId);
       if (error) throw error;
       return null;
     },
@@ -100,7 +91,7 @@ export const useProfileExperience = (profileId: string | undefined) => {
       toast({ title: 'Experience Deleted', description: 'Work experience has been removed.' });
       queryClient.invalidateQueries({ queryKey });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({ variant: 'destructive', title: 'Delete Failed', description: error.message });
     },
   });

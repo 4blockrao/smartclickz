@@ -2,13 +2,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-export type SocialPlatform = 
-  | "facebook" 
-  | "instagram" 
-  | "twitter" 
-  | "tiktok" 
-  | "youtube" 
-  | "linkedin";
+const sb = supabase as any;
+
+export type SocialPlatform = "facebook" | "instagram" | "twitter" | "tiktok" | "youtube" | "linkedin";
 
 export interface SocialAccount {
   id: string;
@@ -31,12 +27,11 @@ export function useSocialAccounts(userId: string | undefined) {
     queryKey: ["social-accounts", userId],
     queryFn: async () => {
       if (!userId) return [];
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("social_accounts")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
-      
       if (error) throw error;
       return (data || []) as SocialAccount[];
     },
@@ -45,103 +40,58 @@ export function useSocialAccounts(userId: string | undefined) {
 
   const addAccount = useMutation({
     mutationFn: async (accountData: {
-      platform: SocialPlatform;
-      username: string;
-      profile_url: string;
-      follower_count?: number;
+      platform: SocialPlatform; username: string; profile_url: string; follower_count?: number;
     }) => {
       if (!userId) throw new Error("User not authenticated");
-      
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("social_accounts")
-        .insert({
-          user_id: userId,
-          ...accountData,
-          verification_status: "pending",
-        })
+        .insert({ user_id: userId, ...accountData, verification_status: "pending" })
         .select()
         .single();
-
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["social-accounts", userId] });
-      toast({
-        title: "Account Added",
-        description: "Your social account has been added and is pending verification.",
-      });
+      toast({ title: "Account Added", description: "Your social account has been added and is pending verification." });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to add social account",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message || "Failed to add social account", variant: "destructive" });
     },
   });
 
   const updateAccount = useMutation({
-    mutationFn: async ({
-      id,
-      updates,
-    }: {
-      id: string;
-      updates: Partial<Pick<SocialAccount, "username" | "profile_url" | "follower_count">>;
-    }) => {
-      const { data, error } = await supabase
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<Pick<SocialAccount, "username" | "profile_url" | "follower_count">> }) => {
+      const { data, error } = await sb
         .from("social_accounts")
-        .update({
-          ...updates,
-          last_updated: new Date().toISOString(),
-        })
+        .update({ ...updates, last_updated: new Date().toISOString() })
         .eq("id", id)
         .eq("user_id", userId!)
         .select()
         .single();
-
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["social-accounts", userId] });
-      toast({
-        title: "Account Updated",
-        description: "Your social account has been updated successfully.",
-      });
+      toast({ title: "Account Updated", description: "Your social account has been updated successfully." });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update social account",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message || "Failed to update social account", variant: "destructive" });
     },
   });
 
   const deleteAccount = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("social_accounts")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", userId!);
-
+      const { error } = await sb.from("social_accounts").delete().eq("id", id).eq("user_id", userId!);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["social-accounts", userId] });
-      toast({
-        title: "Account Removed",
-        description: "Your social account has been removed.",
-      });
+      toast({ title: "Account Removed", description: "Your social account has been removed." });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to remove social account",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message || "Failed to remove social account", variant: "destructive" });
     },
   });
 
