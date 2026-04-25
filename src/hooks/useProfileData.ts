@@ -73,7 +73,7 @@ export const useProfileData = (userId: string | undefined) => {
       if (!profile) return null;
 
       // Fetch details from profile_details table
-      const { data: details, error: detailsError } = await (supabase as any)
+      const { data: details, error: detailsError } = await supabase
         .from("profile_details")
         .select(`
           id, profile_id, full_name, username, "current_role", company, industry, badge, referral_code
@@ -136,7 +136,7 @@ export const useProfileData = (userId: string | undefined) => {
         referral_code: values.referral_code,
       };
       // Upsert by unique profile_id
-      const { error: detailsErr } = await (supabase as any)
+      const { error: detailsErr } = await supabase
         .from("profile_details")
         .upsert(detailsObj, { onConflict: "profile_id" });
       if (detailsErr) throw detailsErr;
@@ -190,7 +190,7 @@ export const useProfileData = (userId: string | undefined) => {
         badge: values.badge,
         referral_code: values.referral_code,
       };
-      const { error: detailsErr } = await (supabase as any)
+      const { error: detailsErr } = await supabase
         .from("profile_details")
         .insert(detailsObj);
       if (detailsErr) throw detailsErr;

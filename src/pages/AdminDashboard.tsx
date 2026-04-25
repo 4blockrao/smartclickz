@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ServicePricingManager } from "@/components/admin/ServicePricingManager";
-
+import AdminHome from "@/pages/admin/AdminHome";
 
 // Only allow admins/super_admins
 function useIsAdmin(userId: string | undefined) {
@@ -60,9 +60,9 @@ export default function AdminDashboard() {
     queryFn: async () => {
       const [usersRes, campaignsRes, tasksRes, transactionsRes] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact" }),
-        (supabase as any).from("campaigns").select("id, status", { count: "exact" }),
+        supabase.from("campaigns").select("id, status", { count: "exact" }),
         supabase.from("tasks").select("id", { count: "exact" }),
-        (supabase as any).from("transactions").select("amount")
+        supabase.from("transactions").select("amount")
       ]);
 
       return {
@@ -228,6 +228,7 @@ export default function AdminDashboard() {
               </Card>
             </div>
 
+            <AdminHome />
           </div>
         )}
       </main>

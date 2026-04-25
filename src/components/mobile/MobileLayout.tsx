@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import MobileAuthGuard from "./MobileAuthGuard";
 import { Toaster } from "../ui/toaster";
 import { motion, AnimatePresence } from "framer-motion";
-
+import MobileDashboardNavigation from "../dashboard/MobileDashboardNavigation";
 
 interface MobileLayoutProps {
   children?: React.ReactNode;
@@ -55,7 +55,7 @@ export default function MobileLayout({
           {children || <Outlet />}
         </main>
         {displayTabBar && <MobileTabBar />}
-        
+        {isDashboardPage && <MobileDashboardNavigation />}
         <Toaster />
       </motion.div>
     </AnimatePresence>

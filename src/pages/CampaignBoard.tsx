@@ -1,8 +1,7 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase as _supabase } from "@/integrations/supabase/client";
-const supabase = _supabase as any;
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

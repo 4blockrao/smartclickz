@@ -8,7 +8,7 @@ export default function CommunityWall() {
     queryKey: ["dashboard-community-wall"],
     queryFn: async () => {
       // join with profiles for avatar/name
-      const { data } = await (supabase as any)
+      const { data } = await supabase
         .from("profile_posts")
         .select("id, content, created_at, profile_id, image_url, profiles!inner(display_name, profile_image_url)")
         .order("created_at", { ascending: false })

@@ -6,7 +6,7 @@ import { Coins, Gift, Award } from "lucide-react";
 import { usePointsWallet } from "@/hooks/usePointsWallet";
 import { useAuth } from "@/hooks/useAuth";
 import { useReferrals } from "@/hooks/useReferrals";
-
+import { CommissionLevelsStatus } from "./CommissionLevelsStatus";
 
 export function DashboardPointsSummary({
   pointsBalance,
@@ -43,6 +43,8 @@ export function DashboardPointsSummary({
           <Award className="w-4 h-4 text-yellow-800" /> Referral: <span className="font-bold ml-auto">{totalReferral}</span>
         </div>
       </div>
+      {/* Show commission unlock info for user */}
+      <CommissionLevelsStatus directs={directs} className="w-full mt-2" />
       <Button asChild variant="outline" size="sm" className="w-full font-semibold shadow-sm mt-auto">
         <Link to="/dashboard/points">More</Link>
       </Button>

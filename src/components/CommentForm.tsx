@@ -57,7 +57,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ targetId, targetType, onComme
           commenter_user_id: user.id,
           content: data.content
         };
-        const { error } = await (supabase as any).from("user_profile_comments" as any).insert(insertData);
+        const { error } = await supabase.from("user_profile_comments" as any).insert(insertData);
         if (error) throw error;
       }
       
