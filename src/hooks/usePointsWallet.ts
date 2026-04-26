@@ -32,9 +32,10 @@ export function usePointsWallet(userId: string | undefined) {
   // Add real-time updates for points_ledger
   useEffect(() => {
     if (!userId) return;
-    const channel = supabase.channel("points-wallet-realtime")
+    const channel = supabase
+      .channel(`points-wallet-realtime-${userId}-${Math.random().toString(36).slice(2)}`)
       .on(
-        "postgres_changes",
+        "postgres_changes" as any,
         {
           event: "*", // Listen for INSERT, UPDATE, DELETE
           schema: "public",
