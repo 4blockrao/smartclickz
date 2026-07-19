@@ -29,56 +29,26 @@ const Leaderboard: React.FC = () => {
   const { data: leaderboardData, isLoading } = useQuery({
     queryKey: ["leaderboard", timeFrame, category],
     queryFn: async () => {
-      // Mock data for now - replace with actual Supabase queries
-      return {
-        topPerformers: [
-          {
-            rank: 1,
-            name: "Sarah Chen",
-            avatar: "/api/placeholder/50/50",
-            points: 28450,
-            tasks: 287,
-            earnings: 1420.50,
-            badge: "Elite Master",
-            streak: 45,
-            level: 12
-          },
-          {
-            rank: 2,
-            name: "Mike Rodriguez",
-            avatar: "/api/placeholder/50/50",
-            points: 26890,
-            tasks: 268,
-            earnings: 1344.50,
-            badge: "Pro Champion",
-            streak: 38,
-            level: 11
-          },
-          {
-            rank: 3,
-            name: "Emma Thompson",
-            avatar: "/api/placeholder/50/50",
-            points: 24750,
-            tasks: 245,
-            earnings: 1237.50,
-            badge: "Expert Leader",
-            streak: 32,
-            level: 10
-          },
-          // Add more performers...
-          ...Array.from({ length: 47 }, (_, i) => ({
-            rank: i + 4,
-            name: `User ${i + 4}`,
-            avatar: "/api/placeholder/50/50",
-            points: 24000 - (i * 200),
-            tasks: 240 - (i * 5),
-            earnings: 1200 - (i * 25),
-            badge: i < 20 ? "Advanced" : "Rising Star",
-            streak: 30 - i,
-            level: Math.max(1, 10 - Math.floor(i / 5))
-          }))
-        ]
-      };
+      // Real data: top profiles by points. (The timeFrame/category tabs are not
+      // yet backed by time-series data, so they currently re-run the same query.)
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, profile_image_url, points, streak")
+        .order("points", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+
+      const topPerformers = (data || []).map((p, i) => ({
+        rank: i + 1,
+        name: p.display_name || "Anonymous",
+        avatar: p.profile_image_url || "",
+        points: p.points || 0,
+        badge: i === 0 ? "Champion" : i < 3 ? "Elite" : i < 10 ? "Advanced" : "Rising Star",
+        streak: p.streak || 0,
+        level: Math.floor((p.points || 0) / 1000) + 1,
+      }));
+
+      return { topPerformers };
     },
   });
 
@@ -227,8 +197,8 @@ const Leaderboard: React.FC = () => {
                       
                       <div className="space-y-2 text-sm">
                         <div className="text-white font-semibold">{performer.points.toLocaleString()} pts</div>
-                        <div className="text-slate-300">{performer.tasks} tasks</div>
-                        <div className="text-green-400">${performer.earnings.toFixed(2)}</div>
+                        <div className="text-slate-300">{performer.streak} day streak</div>
+                        <div className="text-purple-300">Level {performer.level}</div>
                       </div>
                     </CardContent>
                   </Card>
@@ -284,8 +254,6 @@ const Leaderboard: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-4 text-sm text-slate-400">
                         <span>{performer.points.toLocaleString()} pts</span>
-                        <span>{performer.tasks} tasks</span>
-                        <span className="text-green-400">${performer.earnings.toFixed(2)}</span>
                         <span>{performer.streak} day streak</span>
                       </div>
                     </div>

@@ -46,6 +46,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
+// NOTE: every `to` below resolves to a real route in App.tsx. Dead links that
+// pointed at unbuilt pages were removed; ones with a real equivalent were
+// repointed (e.g. /referral-dashboard -> /referrals, /dashboard/account-settings
+// -> /dashboard/account, packages -> /packages, campaign studio -> /create-campaign).
 const navigationGroups = [
   {
     label: "Command Center",
@@ -58,9 +62,7 @@ const navigationGroups = [
     items: [
       { label: "Digital Wallet", to: "/wallet", icon: Wallet, badge: "Premium" },
       { label: "Rewards Hub", to: "/dashboard/points", icon: Trophy },
-      { label: "Analytics Dashboard", to: "/dashboard/earnings", icon: TrendingUp },
-      { label: "Performance Metrics", to: "/dashboard/packages", icon: Package },
-      { label: "Transaction Log", to: "/dashboard/transactions", icon: FileText },
+      { label: "Investment Packages", to: "/packages", icon: Package },
       { label: "Auto Payouts", to: "/dashboard/payouts", icon: DollarSign, badge: "Pro" },
     ]
   },
@@ -69,15 +71,12 @@ const navigationGroups = [
     items: [
       { label: "Task Portfolio", to: "/dashboard/tasks", icon: Target },
       { label: "Activity History", to: "/dashboard/task-history", icon: BarChart3 },
-      { label: "Opportunity Board", to: "/dashboard/classifieds", icon: Briefcase },
-      { label: "Content Viewing", to: "/dashboard/ad-viewing", icon: Eye },
-      { label: "Onboarding Path", to: "/dashboard/onboarding", icon: CheckSquare },
     ]
   },
   {
     label: "Campaign Management",
     items: [
-      { label: "Campaign Studio", to: "/dashboard/campaigns", icon: Megaphone, badge: "Elite" },
+      { label: "Campaign Studio", to: "/create-campaign", icon: Megaphone, badge: "Elite" },
       { label: "Campaign Hub", to: "/campaigns", icon: Target },
       { label: "Performance Analytics", to: "/dashboard/campaign-analytics", icon: BarChart3, badge: "New" },
     ]
@@ -86,10 +85,8 @@ const navigationGroups = [
     label: "Network & Community",
     items: [
       { label: "Team Management", to: "/dashboard/team", icon: Users },
-      { label: "Team Analytics", to: "/dashboard/team-performance", icon: Award },
-      { label: "Referral System", to: "/referral-dashboard", icon: UserPlus },
+      { label: "Referral System", to: "/referrals", icon: UserPlus },
       { label: "Volume Tracker", to: "/dashboard/balanced-volume", icon: Calculator, badge: "Commission" },
-      // Removed: Communications, Discover Professionals, Explore Companies
     ]
   },
   {
@@ -99,14 +96,13 @@ const navigationGroups = [
       { label: "Rank Progression", to: "/dashboard/rank-progress", icon: Crown, badge: "Elite" },
       { label: "Royalty Center", to: "/dashboard/royalty", icon: Zap, badge: "Exclusive" },
       { label: "Leadership Portal", to: "/dashboard/leadership", icon: Star, badge: "VIP" },
-      { label: "Events Calendar", to: "/dashboard/events", icon: Calendar },
     ]
   },
   {
     label: "Settings & Security",
     items: [
       { label: "Profile Management", to: "/dashboard/profile", icon: Settings },
-      { label: "Account Security", to: "/dashboard/account-settings", icon: Shield },
+      { label: "Account Security", to: "/dashboard/account", icon: Shield },
     ]
   }
 ];

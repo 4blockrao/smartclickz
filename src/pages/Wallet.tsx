@@ -27,6 +27,7 @@ import {
   Filter
 } from "lucide-react";
 import { motion } from "framer-motion";
+import ProMembershipCard from "@/components/dashboard/ProMembershipCard";
 
 const Wallet: React.FC = () => {
   const { user } = useAuth();
@@ -224,6 +225,9 @@ const Wallet: React.FC = () => {
 
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6">
+              {/* Membership / Go Pro */}
+              <ProMembershipCard />
+
               {/* Earnings Breakdown */}
               <Card className="bg-white/10 backdrop-blur-lg border-white/20">
                 <CardHeader>

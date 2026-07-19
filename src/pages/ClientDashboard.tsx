@@ -20,6 +20,7 @@ import {
   Eye
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ClientDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -50,12 +51,38 @@ const ClientDashboard: React.FC = () => {
         .select("*")
         .eq("client_id", clientData.id)
         .order("created_at", { ascending: false });
-      
+
       if (error) throw error;
       return data;
     },
     enabled: !!clientData,
   });
+
+  // Real per-campaign reporting from the campaign_performance rollup view.
+  const { data: performance = [] } = useQuery({
+    queryKey: ["campaign-performance", clientData?.id],
+    queryFn: async () => {
+      if (!clientData) return [];
+      const { data, error } = await supabase
+        .from("campaign_performance" as any)
+        .select("*")
+        .eq("client_id", clientData.id);
+      if (error) throw error;
+      return (data || []) as any[];
+    },
+    enabled: !!clientData,
+  });
+
+  const perfTotals = performance.reduce(
+    (acc, p) => ({
+      approved: acc.approved + (Number(p.tasks_approved) || 0),
+      submitted: acc.submitted + (Number(p.tasks_submitted) || 0),
+      pointsPaid: acc.pointsPaid + (Number(p.points_paid) || 0),
+      views: acc.views + (Number(p.views) || 0),
+      clicks: acc.clicks + (Number(p.clicks) || 0),
+    }),
+    { approved: 0, submitted: 0, pointsPaid: 0, views: 0, clicks: 0 }
+  );
 
   const stats = [
     {
@@ -234,19 +261,81 @@ const ClientDashboard: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="analytics">
+          <TabsContent value="analytics" className="space-y-6">
+            {/* Summary */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {[
+                { label: "Completions", value: perfTotals.approved, icon: CheckCircle },
+                { label: "Pending Review", value: perfTotals.submitted, icon: Clock },
+                { label: "Points Paid", value: perfTotals.pointsPaid.toLocaleString(), icon: TrendingUp },
+                { label: "Clicks", value: perfTotals.clicks.toLocaleString(), icon: Target },
+                { label: "Views", value: perfTotals.views.toLocaleString(), icon: Eye },
+              ].map((s) => (
+                <Card key={s.label} className="border border-border/50">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                      <s.icon className="h-4 w-4" />
+                      <span className="text-xs">{s.label}</span>
+                    </div>
+                    <div className="text-2xl font-bold text-foreground">{s.value}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Per-campaign breakdown */}
             <Card className="border border-border/50">
               <CardHeader>
-                <CardTitle>Performance Analytics</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Per-Campaign Performance
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
-                  <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Analytics Coming Soon</h3>
-                  <p className="text-muted-foreground">
-                    Detailed campaign analytics and insights will be available soon
-                  </p>
-                </div>
+                {performance.length === 0 ? (
+                  <div className="text-center py-12">
+                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No data yet</h3>
+                    <p className="text-muted-foreground">
+                      Metrics appear here as users engage with your campaigns.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-muted-foreground border-b border-border/50">
+                          <th className="py-2 pr-4 font-medium">Campaign</th>
+                          <th className="py-2 px-2 font-medium">Status</th>
+                          <th className="py-2 px-2 font-medium text-right">Completed</th>
+                          <th className="py-2 px-2 font-medium text-right">Submitted</th>
+                          <th className="py-2 px-2 font-medium text-right">Available</th>
+                          <th className="py-2 px-2 font-medium text-right">Points Paid</th>
+                          <th className="py-2 px-2 font-medium text-right">Clicks</th>
+                          <th className="py-2 pl-2 font-medium text-right">Views</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {performance.map((p) => (
+                          <tr key={p.campaign_id} className="border-b border-border/20">
+                            <td className="py-3 pr-4 font-medium text-foreground">{p.title}</td>
+                            <td className="py-3 px-2">
+                              <Badge variant="outline" className="capitalize">{p.status}</Badge>
+                            </td>
+                            <td className="py-3 px-2 text-right">
+                              {Number(p.tasks_approved) || 0}/{Number(p.tasks_total) || 0}
+                            </td>
+                            <td className="py-3 px-2 text-right">{Number(p.tasks_submitted) || 0}</td>
+                            <td className="py-3 px-2 text-right">{Number(p.tasks_available) || 0}</td>
+                            <td className="py-3 px-2 text-right">{(Number(p.points_paid) || 0).toLocaleString()}</td>
+                            <td className="py-3 px-2 text-right">{Number(p.clicks) || 0}</td>
+                            <td className="py-3 pl-2 text-right">{Number(p.views) || 0}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -263,7 +352,13 @@ const ClientDashboard: React.FC = () => {
                       <h3 className="font-semibold">Current Balance</h3>
                       <p className="text-2xl font-bold text-primary">${clientData?.wallet_balance || 0}</p>
                     </div>
-                    <Button>Add Funds</Button>
+                    <Button
+                      onClick={() =>
+                        toast.info("Online checkout is coming soon. Contact support to top up your wallet in the meantime.")
+                      }
+                    >
+                      Add Funds
+                    </Button>
                   </div>
                   
                   <div>

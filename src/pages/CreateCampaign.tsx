@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { ArrowLeft, Plus, Target, DollarSign, Users, Calendar } from 'lucide-react';
+import { ArrowLeft, Plus, Target, DollarSign, Users, Calendar, Package } from 'lucide-react';
 
 interface CampaignFormData {
   title: string;
@@ -30,6 +30,7 @@ interface CampaignFormData {
   target_age_min: number;
   target_age_max: number;
   proof_requirements: string;
+  package_id: string | null;
 }
 
 const CreateCampaign: React.FC = () => {
@@ -52,10 +53,35 @@ const CreateCampaign: React.FC = () => {
     target_interests: [],
     target_age_min: 18,
     target_age_max: 65,
-    proof_requirements: ''
+    proof_requirements: '',
+    package_id: null,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [packages, setPackages] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from('advertiser_packages' as any)
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => setPackages(data || []));
+  }, []);
+
+  // Picking a package pre-fills the campaign; advertiser can still tweak below.
+  const selectPackage = (pkg: any) => {
+    setFormData(prev => ({
+      ...prev,
+      package_id: pkg.id,
+      campaign_type: pkg.category,
+      target_platform: pkg.target_platform || prev.target_platform,
+      max_tasks: pkg.task_count,
+      reward_per_task: pkg.base_points_per_task,
+      total_budget: pkg.price,
+      title: prev.title || pkg.name,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,8 +147,9 @@ const CreateCampaign: React.FC = () => {
           target_age_min: formData.target_age_min,
           target_age_max: formData.target_age_max,
           proof_requirements: formData.proof_requirements,
+          package_id: formData.package_id,
           status: 'draft'
-        })
+        } as any)
         .select()
         .single();
 
@@ -172,6 +199,50 @@ const CreateCampaign: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Package Selection */}
+          {packages.length > 0 && (
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Package className="w-5 h-5 text-blue-400" />
+                  Choose a Package
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {packages.map((pkg) => {
+                    const selected = formData.package_id === pkg.id;
+                    return (
+                      <button
+                        type="button"
+                        key={pkg.id}
+                        onClick={() => selectPackage(pkg)}
+                        className={`text-left p-4 rounded-xl border transition-all ${
+                          selected
+                            ? 'border-blue-500 bg-blue-500/10 ring-2 ring-blue-500/40'
+                            : 'border-slate-600 bg-slate-700/40 hover:border-slate-500'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-semibold text-white">{pkg.name}</span>
+                          <Badge className="bg-green-500/20 text-green-300">${pkg.price}</Badge>
+                        </div>
+                        <p className="text-xs text-slate-400 mb-2">{pkg.description}</p>
+                        <div className="flex items-center gap-3 text-xs text-slate-300">
+                          <span>{pkg.task_count} activities</span>
+                          <span>{pkg.base_points_per_task} pts each</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-slate-500 mt-3">
+                  Selecting a package pre-fills the campaign below. You can still adjust any detail.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Campaign Basics */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
@@ -214,11 +285,16 @@ const CreateCampaign: React.FC = () => {
                       <SelectValue placeholder="Select campaign type" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-700 border-slate-600">
+                      <SelectItem value="website_visits">Website Visits</SelectItem>
+                      <SelectItem value="social_promotion">Social Media Promotion</SelectItem>
+                      <SelectItem value="classified_post">Classified / Custom Post</SelectItem>
+                      <SelectItem value="property_listing">Property Listing</SelectItem>
+                      <SelectItem value="app_installs">App Installs</SelectItem>
+                      <SelectItem value="survey">Survey</SelectItem>
                       <SelectItem value="follower_growth">Follower Growth</SelectItem>
                       <SelectItem value="engagement_boost">Engagement Boost</SelectItem>
                       <SelectItem value="content_amplification">Content Amplification</SelectItem>
-                      <SelectItem value="surveys">Surveys</SelectItem>
-                      <SelectItem value="app_installs">App Installs</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

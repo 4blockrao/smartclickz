@@ -30,11 +30,16 @@ interface UserTaskCompletion {
 }
 
 export default function TaskDetail() {
-  const { taskId } = useParams<{ taskId: string }>();
+  // Route is defined as `tasks/:id` in App.tsx — read `id`, not `taskId`.
+  const { id: taskId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
+  // Declared here (with all other hooks) so they run on every render — must be
+  // above the conditional early returns below to satisfy the Rules of Hooks.
+  const [proofText, setProofText] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
 
   const { data: task, isLoading: isLoadingTask, error: taskError } = useQuery({
     queryKey: ["task-detail", taskId],
@@ -91,9 +96,27 @@ export default function TaskDetail() {
       if (!user) throw new Error("User not authenticated");
       if (!currentTaskId) throw new Error("Task ID is missing");
 
+      // Persist the proof the user provided (previously collected then discarded).
+      let proof_url: string | null = null;
+      if (proofFile) {
+        const fileExt = proofFile.name.split(".").pop();
+        const fileName = `${user.id}_${currentTaskId}_${Date.now()}.${fileExt}`;
+        const { data: uploaded, error: uploadError } = await supabase.storage
+          .from("task-proofs")
+          .upload(fileName, proofFile);
+        if (uploadError) throw uploadError;
+        proof_url = supabase.storage.from("task-proofs").getPublicUrl(uploaded.path).data.publicUrl;
+      }
+
       const { error, data } = await supabase
         .from("user_task_completions")
-        .insert({ task_id: currentTaskId, user_id: user.id, status: "completed" });
+        .insert({
+          task_id: currentTaskId,
+          user_id: user.id,
+          status: "completed",
+          proof_text: proofText.trim() || null,
+          proof_url,
+        });
 
       if (error) {
         // Enhanced error logging for debugging!
@@ -174,9 +197,6 @@ export default function TaskDetail() {
       </div>
     );
   }
-
-  const [proofText, setProofText] = useState("");
-  const [proofFile, setProofFile] = useState<File | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
@@ -277,7 +297,7 @@ export default function TaskDetail() {
                   size="lg" 
                   className={`w-full ${isTaskCompleted ? 'bg-green-500 hover:bg-green-600' : 'bg-primary hover:bg-primary/90'} text-primary-foreground`}
                   onClick={handleCompleteTask}
-                  disabled={isTaskCompleted || markTaskAsDoneMutation.isPending || (!proofText.trim() && !isTaskCompleted)}
+                  disabled={isTaskCompleted || markTaskAsDoneMutation.isPending || (!proofText.trim() && !proofFile && !isTaskCompleted)}
                 >
                   {markTaskAsDoneMutation.isPending ? (
                     "Submitting..."

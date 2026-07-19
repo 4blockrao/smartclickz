@@ -38,39 +38,169 @@ export type Database = {
         }
         Relationships: []
       }
-      classified_ads: {
+      campaign_tasks: {
         Row: {
-          description: string
-          expires_at: string | null
+          admin_note: string | null
+          approved_at: string | null
+          campaign_id: string
+          created_at: string | null
           id: string
-          image_url: string | null
-          paid: boolean | null
-          posted_at: string | null
+          proof_data: Json | null
+          proof_url: string | null
+          reward_amount: number | null
           status: string | null
-          title: string
-          user_id: string
+          submitted_at: string | null
+          user_id: string | null
         }
         Insert: {
-          description: string
-          expires_at?: string | null
+          admin_note?: string | null
+          approved_at?: string | null
+          campaign_id: string
+          created_at?: string | null
           id?: string
-          image_url?: string | null
-          paid?: boolean | null
-          posted_at?: string | null
+          proof_data?: Json | null
+          proof_url?: string | null
+          reward_amount?: number | null
           status?: string | null
-          title: string
-          user_id: string
+          submitted_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          description?: string
-          expires_at?: string | null
+          admin_note?: string | null
+          approved_at?: string | null
+          campaign_id?: string
+          created_at?: string | null
           id?: string
-          image_url?: string | null
-          paid?: boolean | null
-          posted_at?: string | null
+          proof_data?: Json | null
+          proof_url?: string | null
+          reward_amount?: number | null
           status?: string | null
+          submitted_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_tasks_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          campaign_type: string | null
+          client_id: string
+          completed_tasks: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          max_tasks: number | null
+          proof_requirements: string | null
+          reward_per_task: number | null
+          spent_budget: number | null
+          start_date: string | null
+          status: string | null
+          target_age_max: number | null
+          target_age_min: number | null
+          target_cities: string[] | null
+          target_countries: string[] | null
+          target_interests: string[] | null
+          target_platform: string | null
+          target_url: string | null
+          title: string
+          total_budget: number | null
+        }
+        Insert: {
+          campaign_type?: string | null
+          client_id: string
+          completed_tasks?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          max_tasks?: number | null
+          proof_requirements?: string | null
+          reward_per_task?: number | null
+          spent_budget?: number | null
+          start_date?: string | null
+          status?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_cities?: string[] | null
+          target_countries?: string[] | null
+          target_interests?: string[] | null
+          target_platform?: string | null
+          target_url?: string | null
+          title: string
+          total_budget?: number | null
+        }
+        Update: {
+          campaign_type?: string | null
+          client_id?: string
+          completed_tasks?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          max_tasks?: number | null
+          proof_requirements?: string | null
+          reward_per_task?: number | null
+          spent_budget?: number | null
+          start_date?: string | null
+          status?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_cities?: string[] | null
+          target_countries?: string[] | null
+          target_interests?: string[] | null
+          target_platform?: string | null
+          target_url?: string | null
           title?: string
+          total_budget?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          business_email: string | null
+          company_name: string
+          created_at: string | null
+          id: string
+          total_spent: number | null
+          user_id: string
+          verification_status: string | null
+          wallet_balance: number | null
+        }
+        Insert: {
+          business_email?: string | null
+          company_name: string
+          created_at?: string | null
+          id?: string
+          total_spent?: number | null
+          user_id: string
+          verification_status?: string | null
+          wallet_balance?: number | null
+        }
+        Update: {
+          business_email?: string | null
+          company_name?: string
+          created_at?: string | null
+          id?: string
+          total_spent?: number | null
           user_id?: string
+          verification_status?: string | null
+          wallet_balance?: number | null
         }
         Relationships: []
       }
@@ -102,7 +232,15 @@ export type Database = {
           replier_user_id?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "comment_replies_replier_user_id_fkey"
+            columns: ["replier_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       comments: {
         Row: {
@@ -129,101 +267,79 @@ export type Database = {
           target_type?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      community_topics: {
+        Row: {
+          author: string | null
+          created_at: string | null
+          id: string
+          replies: number | null
+          title: string
+          trending: boolean | null
+          url: string | null
+        }
+        Insert: {
+          author?: string | null
+          created_at?: string | null
+          id?: string
+          replies?: number | null
+          title: string
+          trending?: boolean | null
+          url?: string | null
+        }
+        Update: {
+          author?: string | null
+          created_at?: string | null
+          id?: string
+          replies?: number | null
+          title?: string
+          trending?: boolean | null
+          url?: string | null
+        }
         Relationships: []
       }
       companies: {
         Row: {
-          address: string | null
-          ceo_name: string | null
-          city: string | null
-          company_type: string | null
-          company_video_url: string | null
-          country: string | null
           created_at: string | null
-          creator_user_id: string | null
           description: string | null
-          employee_count: number | null
-          facebook_url: string | null
-          founded_year: number | null
-          headquarters: string | null
           id: string
           industry: string | null
-          instagram_url: string | null
-          is_verified: boolean | null
-          linkedin_url: string | null
           logo_url: string | null
-          name: string
-          phone: string | null
-          products_services: string | null
+          name: string | null
           rating: number | null
-          state: string | null
           total_reviews: number | null
-          twitter_url: string | null
-          updated_at: string | null
-          website: string | null
-          youtube_url: string | null
+          website_url: string | null
         }
         Insert: {
-          address?: string | null
-          ceo_name?: string | null
-          city?: string | null
-          company_type?: string | null
-          company_video_url?: string | null
-          country?: string | null
           created_at?: string | null
-          creator_user_id?: string | null
           description?: string | null
-          employee_count?: number | null
-          facebook_url?: string | null
-          founded_year?: number | null
-          headquarters?: string | null
           id?: string
           industry?: string | null
-          instagram_url?: string | null
-          is_verified?: boolean | null
-          linkedin_url?: string | null
           logo_url?: string | null
-          name: string
-          phone?: string | null
-          products_services?: string | null
+          name?: string | null
           rating?: number | null
-          state?: string | null
           total_reviews?: number | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website?: string | null
-          youtube_url?: string | null
+          website_url?: string | null
         }
         Update: {
-          address?: string | null
-          ceo_name?: string | null
-          city?: string | null
-          company_type?: string | null
-          company_video_url?: string | null
-          country?: string | null
           created_at?: string | null
-          creator_user_id?: string | null
           description?: string | null
-          employee_count?: number | null
-          facebook_url?: string | null
-          founded_year?: number | null
-          headquarters?: string | null
           id?: string
           industry?: string | null
-          instagram_url?: string | null
-          is_verified?: boolean | null
-          linkedin_url?: string | null
           logo_url?: string | null
-          name?: string
-          phone?: string | null
-          products_services?: string | null
+          name?: string | null
           rating?: number | null
-          state?: string | null
           total_reviews?: number | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website?: string | null
-          youtube_url?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -254,80 +370,14 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "company_comments_commenter_user_id_fkey"
+            columns: ["commenter_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "company_comments_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      company_followers: {
-        Row: {
-          company_id: string
-          created_at: string | null
-          id: string
-          user_id: string
-        }
-        Insert: {
-          company_id: string
-          created_at?: string | null
-          id?: string
-          user_id: string
-        }
-        Update: {
-          company_id?: string
-          created_at?: string | null
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "company_followers_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      company_team_members: {
-        Row: {
-          company_id: string
-          created_at: string | null
-          id: string
-          is_verified: boolean | null
-          join_date: string | null
-          performance_rank: number | null
-          position: string | null
-          profile_id: string
-          total_sales: number | null
-        }
-        Insert: {
-          company_id: string
-          created_at?: string | null
-          id?: string
-          is_verified?: boolean | null
-          join_date?: string | null
-          performance_rank?: number | null
-          position?: string | null
-          profile_id: string
-          total_sales?: number | null
-        }
-        Update: {
-          company_id?: string
-          created_at?: string | null
-          id?: string
-          is_verified?: boolean | null
-          join_date?: string | null
-          performance_rank?: number | null
-          position?: string | null
-          profile_id?: string
-          total_sales?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "company_team_members_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -341,406 +391,24 @@ export type Database = {
           id: string
           message: string | null
           receiver_id: string
-          responded_at: string | null
           sender_id: string
-          status: string
+          status: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string
           message?: string | null
           receiver_id: string
-          responded_at?: string | null
           sender_id: string
-          status?: string
+          status?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
           message?: string | null
           receiver_id?: string
-          responded_at?: string | null
           sender_id?: string
-          status?: string
-        }
-        Relationships: []
-      }
-      discovery_calls: {
-        Row: {
-          created_at: string | null
-          date: string
-          description: string | null
-          host: string
-          id: string
-          spots: number | null
-          title: string
-          url: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          date: string
-          description?: string | null
-          host: string
-          id?: string
-          spots?: number | null
-          title: string
-          url?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          date?: string
-          description?: string | null
-          host?: string
-          id?: string
-          spots?: number | null
-          title?: string
-          url?: string | null
-        }
-        Relationships: []
-      }
-      event_attendance: {
-        Row: {
-          attending_at: string | null
-          event_id: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          attending_at?: string | null
-          event_id: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          attending_at?: string | null
-          event_id?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_attendance_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      event_comments: {
-        Row: {
-          content: string
-          created_at: string | null
-          event_id: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string | null
-          event_id: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string | null
-          event_id?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_comments_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      events: {
-        Row: {
-          address: string | null
-          city: string | null
-          country: string | null
-          created_at: string | null
-          date: string
-          end_time: string | null
-          id: string
-          is_paid: boolean | null
-          location_type: string
-          start_time: string | null
-          state: string | null
-          title: string
-          type: string
-          url: string | null
-          webinar_url: string | null
-        }
-        Insert: {
-          address?: string | null
-          city?: string | null
-          country?: string | null
-          created_at?: string | null
-          date: string
-          end_time?: string | null
-          id?: string
-          is_paid?: boolean | null
-          location_type: string
-          start_time?: string | null
-          state?: string | null
-          title: string
-          type: string
-          url?: string | null
-          webinar_url?: string | null
-        }
-        Update: {
-          address?: string | null
-          city?: string | null
-          country?: string | null
-          created_at?: string | null
-          date?: string
-          end_time?: string | null
-          id?: string
-          is_paid?: boolean | null
-          location_type?: string
-          start_time?: string | null
-          state?: string | null
-          title?: string
-          type?: string
-          url?: string | null
-          webinar_url?: string | null
-        }
-        Relationships: []
-      }
-      login_history: {
-        Row: {
-          attempted_at: string | null
-          device_type: Database["public"]["Enums"]["device_type"] | null
-          failure_reason: string | null
-          id: string
-          ip_address: unknown
-          is_suspicious: boolean | null
-          location: Json | null
-          session_id: string | null
-          status: Database["public"]["Enums"]["login_status"]
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          attempted_at?: string | null
-          device_type?: Database["public"]["Enums"]["device_type"] | null
-          failure_reason?: string | null
-          id?: string
-          ip_address: unknown
-          is_suspicious?: boolean | null
-          location?: Json | null
-          session_id?: string | null
-          status: Database["public"]["Enums"]["login_status"]
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          attempted_at?: string | null
-          device_type?: Database["public"]["Enums"]["device_type"] | null
-          failure_reason?: string | null
-          id?: string
-          ip_address?: unknown
-          is_suspicious?: boolean | null
-          location?: Json | null
-          session_id?: string | null
-          status?: Database["public"]["Enums"]["login_status"]
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      monthly_contest_companies: {
-        Row: {
-          application_notes: string | null
-          company_id: string
-          contest_month: string
-          created_at: string | null
-          id: string
-          is_candidate: boolean | null
-          is_winner: boolean | null
-          updated_at: string | null
-        }
-        Insert: {
-          application_notes?: string | null
-          company_id: string
-          contest_month: string
-          created_at?: string | null
-          id?: string
-          is_candidate?: boolean | null
-          is_winner?: boolean | null
-          updated_at?: string | null
-        }
-        Update: {
-          application_notes?: string | null
-          company_id?: string
-          contest_month?: string
-          created_at?: string | null
-          id?: string
-          is_candidate?: boolean | null
-          is_winner?: boolean | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      monthly_contest_company_votes: {
-        Row: {
-          contest_company_id: string
-          id: string
-          user_id: string
-          voted_at: string | null
-        }
-        Insert: {
-          contest_company_id: string
-          id?: string
-          user_id: string
-          voted_at?: string | null
-        }
-        Update: {
-          contest_company_id?: string
-          id?: string
-          user_id?: string
-          voted_at?: string | null
-        }
-        Relationships: []
-      }
-      monthly_contest_networker_votes: {
-        Row: {
-          contest_networker_id: string
-          id: string
-          user_id: string
-          voted_at: string | null
-        }
-        Insert: {
-          contest_networker_id: string
-          id?: string
-          user_id: string
-          voted_at?: string | null
-        }
-        Update: {
-          contest_networker_id?: string
-          id?: string
-          user_id?: string
-          voted_at?: string | null
-        }
-        Relationships: []
-      }
-      monthly_contest_networkers: {
-        Row: {
-          application_notes: string | null
-          contest_month: string
-          created_at: string | null
-          id: string
-          is_candidate: boolean | null
-          is_winner: boolean | null
-          profile_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          application_notes?: string | null
-          contest_month: string
-          created_at?: string | null
-          id?: string
-          is_candidate?: boolean | null
-          is_winner?: boolean | null
-          profile_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          application_notes?: string | null
-          contest_month?: string
-          created_at?: string | null
-          id?: string
-          is_candidate?: boolean | null
-          is_winner?: boolean | null
-          profile_id?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      Net: {
-        Row: {
-          created_at: string | null
-          id: number
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-        }
-        Relationships: []
-      }
-      news: {
-        Row: {
-          author: string | null
-          category: string
-          content: string | null
-          created_at: string | null
-          date: string | null
-          headline: string
-          id: string
-          image_url: string | null
-          slug: string | null
-        }
-        Insert: {
-          author?: string | null
-          category: string
-          content?: string | null
-          created_at?: string | null
-          date?: string | null
-          headline: string
-          id?: string
-          image_url?: string | null
-          slug?: string | null
-        }
-        Update: {
-          author?: string | null
-          category?: string
-          content?: string | null
-          created_at?: string | null
-          date?: string | null
-          headline?: string
-          id?: string
-          image_url?: string | null
-          slug?: string | null
-        }
-        Relationships: []
-      }
-      password_reset_tokens: {
-        Row: {
-          created_at: string | null
-          expires_at: string
-          id: string
-          ip_address: unknown
-          token_hash: string
-          used_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          expires_at: string
-          id?: string
-          ip_address?: unknown
-          token_hash: string
-          used_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          expires_at?: string
-          id?: string
-          ip_address?: unknown
-          token_hash?: string
-          used_at?: string | null
-          user_id?: string
+          status?: string | null
         }
         Relationships: []
       }
@@ -778,7 +446,139 @@ export type Database = {
           type?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "points_ledger_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          likes: number | null
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          likes?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          likes?: number | null
+          user_id?: string | null
+        }
         Relationships: []
+      }
+      profile_details: {
+        Row: {
+          badge: string | null
+          company: string | null
+          created_at: string | null
+          current_role: string | null
+          full_name: string | null
+          id: string
+          industry: string | null
+          profile_id: string
+          referral_code: string | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          badge?: string | null
+          company?: string | null
+          created_at?: string | null
+          current_role?: string | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          profile_id: string
+          referral_code?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          badge?: string | null
+          company?: string | null
+          created_at?: string | null
+          current_role?: string | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          profile_id?: string
+          referral_code?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_details_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_experience: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          description: string | null
+          employment_type: string | null
+          end_date: string | null
+          id: string
+          location: string | null
+          profile_id: string
+          start_date: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          description?: string | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          location?: string | null
+          profile_id: string
+          start_date: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          description?: string | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          location?: string | null
+          profile_id?: string
+          start_date?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_experience_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profile_followers: {
         Row: {
@@ -799,246 +599,247 @@ export type Database = {
           following_id?: string
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profile_followers_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_followers_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_gallery: {
+        Row: {
+          caption: string | null
+          created_at: string | null
+          id: string
+          image_url: string
+          profile_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          image_url: string
+          profile_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_gallery_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_posts: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string
+          image_url: string | null
+          likes: number | null
+          profile_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          likes?: number | null
+          profile_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          likes?: number | null
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_posts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
-          account_locked_until: string | null
           achievements: string | null
           availability_status: string | null
-          avatar_url: string | null
-          backup_codes: string[] | null
           bio: string | null
           city: string | null
           connection_count: number | null
           country: string | null
           cover_image_url: string | null
           created_at: string | null
-          current_company: string | null
-          current_position: string | null
           date_of_birth: string | null
-          display_name: string
+          display_name: string | null
           email: string | null
-          email_verified_at: string | null
           facebook_url: string | null
-          failed_login_attempts: number | null
           follower_count: number | null
           following_count: number | null
-          full_name: string | null
           id: string
           instagram_url: string | null
           is_verified: boolean | null
           key_skills: string | null
           kyc_status: string | null
-          language: string | null
           languages: string | null
-          last_active_at: string | null
-          last_login_at: string | null
-          last_login_ip: unknown
           linkedin_url: string | null
-          location: string | null
-          mfa_enabled: boolean | null
           networker_type: string | null
-          notification_preferences: Json | null
-          password_changed_at: string | null
           phone: string | null
-          phone_verified_at: string | null
           points: number | null
           profile_image_url: string | null
           profile_views: number | null
           rank: string | null
           referral_user_id: string | null
-          referrals_this_month: number | null
-          role: string | null
           specialization: string | null
           streak: number | null
-          streak_popup_shown: boolean | null
           team_level1: number | null
           team_level2: number | null
           team_level3: number | null
           team_size: number | null
-          tiktok_url: string | null
           time_zone: string | null
           twitter_url: string | null
           updated_at: string | null
           user_id: string
-          username: string | null
-          wallet_balance: number | null
-          website: string | null
           website_url: string | null
           withdrawal_details: Json | null
           withdrawal_method: string | null
-          xp_level: number | null
-          xp_required: number | null
-          years_experience: number | null
           youtube_url: string | null
         }
         Insert: {
-          account_locked_until?: string | null
           achievements?: string | null
           availability_status?: string | null
-          avatar_url?: string | null
-          backup_codes?: string[] | null
           bio?: string | null
           city?: string | null
           connection_count?: number | null
           country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
-          current_company?: string | null
-          current_position?: string | null
           date_of_birth?: string | null
-          display_name: string
+          display_name?: string | null
           email?: string | null
-          email_verified_at?: string | null
           facebook_url?: string | null
-          failed_login_attempts?: number | null
           follower_count?: number | null
           following_count?: number | null
-          full_name?: string | null
           id?: string
           instagram_url?: string | null
           is_verified?: boolean | null
           key_skills?: string | null
           kyc_status?: string | null
-          language?: string | null
           languages?: string | null
-          last_active_at?: string | null
-          last_login_at?: string | null
-          last_login_ip?: unknown
           linkedin_url?: string | null
-          location?: string | null
-          mfa_enabled?: boolean | null
           networker_type?: string | null
-          notification_preferences?: Json | null
-          password_changed_at?: string | null
           phone?: string | null
-          phone_verified_at?: string | null
           points?: number | null
           profile_image_url?: string | null
           profile_views?: number | null
           rank?: string | null
           referral_user_id?: string | null
-          referrals_this_month?: number | null
-          role?: string | null
           specialization?: string | null
           streak?: number | null
-          streak_popup_shown?: boolean | null
           team_level1?: number | null
           team_level2?: number | null
           team_level3?: number | null
           team_size?: number | null
-          tiktok_url?: string | null
           time_zone?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           user_id: string
-          username?: string | null
-          wallet_balance?: number | null
-          website?: string | null
           website_url?: string | null
           withdrawal_details?: Json | null
           withdrawal_method?: string | null
-          xp_level?: number | null
-          xp_required?: number | null
-          years_experience?: number | null
           youtube_url?: string | null
         }
         Update: {
-          account_locked_until?: string | null
           achievements?: string | null
           availability_status?: string | null
-          avatar_url?: string | null
-          backup_codes?: string[] | null
           bio?: string | null
           city?: string | null
           connection_count?: number | null
           country?: string | null
           cover_image_url?: string | null
           created_at?: string | null
-          current_company?: string | null
-          current_position?: string | null
           date_of_birth?: string | null
-          display_name?: string
+          display_name?: string | null
           email?: string | null
-          email_verified_at?: string | null
           facebook_url?: string | null
-          failed_login_attempts?: number | null
           follower_count?: number | null
           following_count?: number | null
-          full_name?: string | null
           id?: string
           instagram_url?: string | null
           is_verified?: boolean | null
           key_skills?: string | null
           kyc_status?: string | null
-          language?: string | null
           languages?: string | null
-          last_active_at?: string | null
-          last_login_at?: string | null
-          last_login_ip?: unknown
           linkedin_url?: string | null
-          location?: string | null
-          mfa_enabled?: boolean | null
           networker_type?: string | null
-          notification_preferences?: Json | null
-          password_changed_at?: string | null
           phone?: string | null
-          phone_verified_at?: string | null
           points?: number | null
           profile_image_url?: string | null
           profile_views?: number | null
           rank?: string | null
           referral_user_id?: string | null
-          referrals_this_month?: number | null
-          role?: string | null
           specialization?: string | null
           streak?: number | null
-          streak_popup_shown?: boolean | null
           team_level1?: number | null
           team_level2?: number | null
           team_level3?: number | null
           team_size?: number | null
-          tiktok_url?: string | null
           time_zone?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           user_id?: string
-          username?: string | null
-          wallet_balance?: number | null
-          website?: string | null
           website_url?: string | null
           withdrawal_details?: Json | null
           withdrawal_method?: string | null
-          xp_level?: number | null
-          xp_required?: number | null
-          years_experience?: number | null
           youtube_url?: string | null
         }
         Relationships: []
       }
       reviews: {
         Row: {
-          company_id: string
+          company_id: string | null
           created_at: string | null
           id: string
-          rating: number
+          rating: number | null
           review: string
           user_id: string
         }
         Insert: {
-          company_id: string
+          company_id?: string | null
           created_at?: string | null
           id?: string
-          rating: number
+          rating?: number | null
           review: string
           user_id: string
         }
         Update: {
-          company_id?: string
+          company_id?: string | null
           created_at?: string | null
           id?: string
-          rating?: number
+          rating?: number | null
           review?: string
           user_id?: string
         }
@@ -1050,86 +851,84 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
-      security_events: {
+      service_pricing: {
         Row: {
-          acknowledged_at: string | null
           created_at: string | null
-          event_data: Json | null
-          event_type: string
+          display_label: string
           id: string
-          ip_address: unknown
-          user_agent: string | null
-          user_id: string
+          is_active: boolean | null
+          notes: string | null
+          point_cost: number
+          service_name: string
+          updated_at: string | null
         }
         Insert: {
-          acknowledged_at?: string | null
           created_at?: string | null
-          event_data?: Json | null
-          event_type: string
+          display_label: string
           id?: string
-          ip_address?: unknown
-          user_agent?: string | null
-          user_id: string
+          is_active?: boolean | null
+          notes?: string | null
+          point_cost?: number
+          service_name: string
+          updated_at?: string | null
         }
         Update: {
-          acknowledged_at?: string | null
           created_at?: string | null
-          event_data?: Json | null
-          event_type?: string
+          display_label?: string
           id?: string
-          ip_address?: unknown
-          user_agent?: string | null
-          user_id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          point_cost?: number
+          service_name?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
-      settings: {
-        Row: {
-          key: string
-          value: string
-        }
-        Insert: {
-          key: string
-          value: string
-        }
-        Update: {
-          key?: string
-          value?: string
-        }
-        Relationships: []
-      }
-      task_event_logs: {
+      social_accounts: {
         Row: {
           created_at: string | null
-          event_by: string | null
-          event_note: string | null
-          event_type: string
+          follower_count: number | null
           id: string
-          task_id: string
-          task_type: string
+          last_updated: string | null
+          platform: string
+          profile_url: string | null
           user_id: string
+          username: string | null
+          verification_status: string | null
+          verified_at: string | null
         }
         Insert: {
           created_at?: string | null
-          event_by?: string | null
-          event_note?: string | null
-          event_type: string
+          follower_count?: number | null
           id?: string
-          task_id: string
-          task_type: string
+          last_updated?: string | null
+          platform: string
+          profile_url?: string | null
           user_id: string
+          username?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
         }
         Update: {
           created_at?: string | null
-          event_by?: string | null
-          event_note?: string | null
-          event_type?: string
+          follower_count?: number | null
           id?: string
-          task_id?: string
-          task_type?: string
+          last_updated?: string | null
+          platform?: string
+          profile_url?: string | null
           user_id?: string
+          username?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -1164,12 +963,27 @@ export type Database = {
           task_id?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "task_submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_submissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       tasks: {
         Row: {
           created_at: string | null
-          created_by: string
+          created_by: string | null
           description: string
           id: string
           is_active: boolean | null
@@ -1181,19 +995,19 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          created_by: string
+          created_by?: string | null
           description: string
           id?: string
           is_active?: boolean | null
-          payout_points: number
-          proof_type: string
+          payout_points?: number
+          proof_type?: string
           title: string
           type: string
           url?: string | null
         }
         Update: {
           created_at?: string | null
-          created_by?: string
+          created_by?: string | null
           description?: string
           id?: string
           is_active?: boolean | null
@@ -1205,139 +1019,139 @@ export type Database = {
         }
         Relationships: []
       }
-      user_ad_views: {
+      transactions: {
         Row: {
-          ad_id: string
+          amount: number
+          created_at: string | null
           id: string
-          status: string | null
-          user_id: string
-          viewed_at: string | null
+          note: string | null
+          related_id: string | null
+          type: string | null
+          user_id: string | null
         }
         Insert: {
-          ad_id: string
+          amount?: number
+          created_at?: string | null
           id?: string
-          status?: string | null
-          user_id: string
-          viewed_at?: string | null
+          note?: string | null
+          related_id?: string | null
+          type?: string | null
+          user_id?: string | null
         }
         Update: {
-          ad_id?: string
+          amount?: number
+          created_at?: string | null
           id?: string
-          status?: string | null
-          user_id?: string
-          viewed_at?: string | null
+          note?: string | null
+          related_id?: string | null
+          type?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "user_ad_views_ad_id_fkey"
-            columns: ["ad_id"]
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "classified_ads"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
-      user_mfa: {
+      user_profile_comments: {
         Row: {
-          backup_codes: string[] | null
+          commented_user_id: string
+          commenter_user_id: string
+          content: string
           created_at: string | null
           id: string
-          is_verified: boolean | null
-          last_used_at: string | null
-          method: Database["public"]["Enums"]["mfa_method"]
-          phone_number: string | null
-          secret_key: string | null
-          user_id: string
         }
         Insert: {
-          backup_codes?: string[] | null
+          commented_user_id: string
+          commenter_user_id: string
+          content: string
           created_at?: string | null
           id?: string
-          is_verified?: boolean | null
-          last_used_at?: string | null
-          method: Database["public"]["Enums"]["mfa_method"]
-          phone_number?: string | null
-          secret_key?: string | null
-          user_id: string
         }
         Update: {
-          backup_codes?: string[] | null
+          commented_user_id?: string
+          commenter_user_id?: string
+          content?: string
           created_at?: string | null
           id?: string
-          is_verified?: boolean | null
-          last_used_at?: string | null
-          method?: Database["public"]["Enums"]["mfa_method"]
-          phone_number?: string | null
-          secret_key?: string | null
-          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_profile_comments_commented_user_id_fkey"
+            columns: ["commented_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_profile_comments_commenter_user_id_fkey"
+            columns: ["commenter_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
-      user_onboarding_task_completions: {
+      user_profile_reviews: {
         Row: {
-          completed_at: string | null
+          created_at: string | null
           id: string
-          onboarding_task_id: string
-          user_id: string
+          rating: number | null
+          review: string
+          reviewed_user_id: string
+          reviewer_user_id: string
         }
         Insert: {
-          completed_at?: string | null
+          created_at?: string | null
           id?: string
-          onboarding_task_id: string
-          user_id: string
+          rating?: number | null
+          review: string
+          reviewed_user_id: string
+          reviewer_user_id: string
         }
         Update: {
-          completed_at?: string | null
+          created_at?: string | null
           id?: string
-          onboarding_task_id?: string
-          user_id?: string
+          rating?: number | null
+          review?: string
+          reviewed_user_id?: string
+          reviewer_user_id?: string
         }
-        Relationships: []
-      }
-      user_preferences: {
-        Row: {
-          id: string
-          key: string
-          updated_at: string | null
-          user_id: string
-          value: Json
-        }
-        Insert: {
-          id?: string
-          key: string
-          updated_at?: string | null
-          user_id: string
-          value: Json
-        }
-        Update: {
-          id?: string
-          key?: string
-          updated_at?: string | null
-          user_id?: string
-          value?: Json
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_profile_reviews_reviewed_user_id_fkey"
+            columns: ["reviewed_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_profile_reviews_reviewer_user_id_fkey"
+            columns: ["reviewer_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       user_referrals: {
         Row: {
-          grand_referrer_id: string | null
-          great_grand_referrer_id: string | null
           id: string
           referred_at: string | null
           referrer_id: string | null
           user_id: string
         }
         Insert: {
-          grand_referrer_id?: string | null
-          great_grand_referrer_id?: string | null
           id?: string
           referred_at?: string | null
           referrer_id?: string | null
           user_id: string
         }
         Update: {
-          grand_referrer_id?: string | null
-          great_grand_referrer_id?: string | null
           id?: string
           referred_at?: string | null
           referrer_id?: string | null
@@ -1347,112 +1161,43 @@ export type Database = {
       }
       user_roles: {
         Row: {
-          assigned_at: string | null
-          assigned_by: string | null
-          expires_at: string | null
-          id: string
-          is_active: boolean | null
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          assigned_at?: string | null
-          assigned_by?: string | null
-          expires_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          assigned_at?: string | null
-          assigned_by?: string | null
-          expires_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_sessions: {
-        Row: {
           created_at: string | null
-          device_info: Json | null
-          expires_at: string
           id: string
-          ip_address: unknown
-          is_active: boolean | null
-          last_activity: string | null
-          session_token: string
-          user_agent: string | null
+          role: string
           user_id: string
         }
         Insert: {
           created_at?: string | null
-          device_info?: Json | null
-          expires_at: string
           id?: string
-          ip_address: unknown
-          is_active?: boolean | null
-          last_activity?: string | null
-          session_token: string
-          user_agent?: string | null
+          role: string
           user_id: string
         }
         Update: {
           created_at?: string | null
-          device_info?: Json | null
-          expires_at?: string
           id?: string
-          ip_address?: unknown
-          is_active?: boolean | null
-          last_activity?: string | null
-          session_token?: string
-          user_agent?: string | null
+          role?: string
           user_id?: string
         }
         Relationships: []
       }
       user_stats: {
         Row: {
-          badges: string[] | null
-          created_at: string | null
           current_streak: number | null
-          id: string
-          last_task_completed_at: string | null
-          level: number | null
-          longest_streak: number | null
-          success_rate: number | null
-          total_earnings: number | null
+          total_points_earned: number | null
           total_tasks_completed: number | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
-          badges?: string[] | null
-          created_at?: string | null
           current_streak?: number | null
-          id?: string
-          last_task_completed_at?: string | null
-          level?: number | null
-          longest_streak?: number | null
-          success_rate?: number | null
-          total_earnings?: number | null
+          total_points_earned?: number | null
           total_tasks_completed?: number | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
-          badges?: string[] | null
-          created_at?: string | null
           current_streak?: number | null
-          id?: string
-          last_task_completed_at?: string | null
-          level?: number | null
-          longest_streak?: number | null
-          success_rate?: number | null
-          total_earnings?: number | null
+          total_points_earned?: number | null
           total_tasks_completed?: number | null
           updated_at?: string | null
           user_id?: string
@@ -1463,6 +1208,8 @@ export type Database = {
         Row: {
           completed_at: string | null
           id: string
+          proof_text: string | null
+          proof_url: string | null
           status: string | null
           task_id: string
           user_id: string
@@ -1470,6 +1217,8 @@ export type Database = {
         Insert: {
           completed_at?: string | null
           id?: string
+          proof_text?: string | null
+          proof_url?: string | null
           status?: string | null
           task_id: string
           user_id: string
@@ -1477,6 +1226,8 @@ export type Database = {
         Update: {
           completed_at?: string | null
           id?: string
+          proof_text?: string | null
+          proof_url?: string | null
           status?: string | null
           task_id?: string
           user_id?: string
@@ -1488,6 +1239,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "tasks"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_task_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1519,92 +1277,33 @@ export type Database = {
           status?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "withdrawal_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      cleanup_expired_reset_tokens: { Args: never; Returns: number }
-      cleanup_expired_sessions: { Args: never; Returns: number }
-      generate_aa_referral_user_id: { Args: never; Returns: string }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
+      assign_task_to_user: {
+        Args: { task_id: string; user_id: string }
         Returns: boolean
       }
-      log_security_event: {
-        Args: {
-          p_event_data?: Json
-          p_event_type: string
-          p_ip_address?: unknown
-          p_user_agent?: string
-          p_user_id: string
-        }
-        Returns: string
+      generate_campaign_tasks: {
+        Args: { campaign_id_param: string }
+        Returns: undefined
       }
-      rand_5_digits: { Args: never; Returns: string }
-      record_login_attempt: {
-        Args: {
-          p_device_type?: Database["public"]["Enums"]["device_type"]
-          p_failure_reason?: string
-          p_ip_address: unknown
-          p_location?: Json
-          p_session_id?: string
-          p_status: Database["public"]["Enums"]["login_status"]
-          p_user_agent: string
-          p_user_id: string
-        }
-        Returns: string
-      }
+      has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "super_admin" | "admin" | "moderator" | "user" | "client"
-      campaign_status: "draft" | "active" | "paused" | "completed" | "cancelled"
-      campaign_type:
-        | "follower_growth"
-        | "engagement_boost"
-        | "content_amplification"
-        | "surveys"
-        | "app_installs"
-        | "social_media_follow"
-        | "social_media_like"
-        | "social_media_share"
-        | "social_media_comment"
-      device_type: "desktop" | "mobile" | "tablet" | "unknown"
-      login_status: "success" | "failed" | "blocked" | "suspicious"
-      mfa_method: "totp" | "sms" | "email"
-      proof_type:
-        | "screenshot"
-        | "api_validation"
-        | "manual_review"
-        | "link_submission"
-      social_platform:
-        | "instagram"
-        | "facebook"
-        | "linkedin"
-        | "twitter"
-        | "youtube"
-        | "tiktok"
-        | "telegram"
-      task_status:
-        | "available"
-        | "assigned"
-        | "submitted"
-        | "approved"
-        | "rejected"
-        | "expired"
-      transaction_type:
-        | "task_reward"
-        | "campaign_payment"
-        | "withdrawal"
-        | "refund"
-        | "commission"
-        | "bonus"
-      user_role: "admin" | "moderator" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1731,55 +1430,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["super_admin", "admin", "moderator", "user", "client"],
-      campaign_status: ["draft", "active", "paused", "completed", "cancelled"],
-      campaign_type: [
-        "follower_growth",
-        "engagement_boost",
-        "content_amplification",
-        "surveys",
-        "app_installs",
-        "social_media_follow",
-        "social_media_like",
-        "social_media_share",
-        "social_media_comment",
-      ],
-      device_type: ["desktop", "mobile", "tablet", "unknown"],
-      login_status: ["success", "failed", "blocked", "suspicious"],
-      mfa_method: ["totp", "sms", "email"],
-      proof_type: [
-        "screenshot",
-        "api_validation",
-        "manual_review",
-        "link_submission",
-      ],
-      social_platform: [
-        "instagram",
-        "facebook",
-        "linkedin",
-        "twitter",
-        "youtube",
-        "tiktok",
-        "telegram",
-      ],
-      task_status: [
-        "available",
-        "assigned",
-        "submitted",
-        "approved",
-        "rejected",
-        "expired",
-      ],
-      transaction_type: [
-        "task_reward",
-        "campaign_payment",
-        "withdrawal",
-        "refund",
-        "commission",
-        "bonus",
-      ],
-      user_role: ["admin", "moderator", "user"],
-    },
+    Enums: {},
   },
 } as const

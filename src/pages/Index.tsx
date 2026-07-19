@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useAuth } from "@/hooks/useModernAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import SeoMeta from "@/components/SeoMeta";

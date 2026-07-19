@@ -103,7 +103,7 @@ export default function AdminTasks() {
         (data || []).map(async (submission) => {
           const { data: task } = await supabase
             .from("tasks")
-            .select("title")
+            .select("title, payout_points")
             .eq("id", submission.task_id)
             .single();
 
@@ -212,16 +212,17 @@ export default function AdminTasks() {
       if (status === "approved") {
         const submission = submissions.find((s) => s.id === id);
         if (submission) {
-          // Add points
-          await supabase.from("points_ledger").insert([
-            {
-              user_id: submission.user_id,
-              amount: 50, // You should fetch the task's payout_points
-              type: "reward",
-              event_code: "task_completed",
-              note: `Task completed: ${submission.tasks.title}`,
-            },
-          ]);
+          // Credit via the tier-aware award function: it fetches the user's tier
+          // multiplier (Pro = 2x), is idempotent per submission, and updates the
+          // cached profiles.points. Base points = the task's payout_points.
+          const payout = Number((submission.tasks as any)?.payout_points) || 0;
+          await supabase.rpc("award_activity_points" as any, {
+            _user_id: submission.user_id,
+            _base_points: payout,
+            _event_code: `task_submission:${submission.id}`,
+            _note: `Task completed: ${submission.tasks.title}`,
+            _event_metadata: { task_id: submission.task_id, submission_id: submission.id },
+          });
 
           // Record completion
           await supabase.from("user_task_completions").insert([
