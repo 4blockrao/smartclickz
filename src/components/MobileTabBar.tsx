@@ -1,5 +1,5 @@
 
-import { Home, List, Calendar, Users, Bell } from "lucide-react";
+import { Home, List, Target, Wallet, Trophy } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,36 +8,11 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const tabs = [
-  {
-    label: "Home",
-    icon: Home,
-    to: "/",
-    public: true,
-  },
-  {
-    label: "Events",
-    icon: Calendar,
-    to: "/events",
-    public: true,
-  },
-  {
-    label: "Community",
-    icon: Users,
-    to: "/profiles",
-    public: true,
-  },
-  {
-    label: "Classifieds",
-    icon: List,
-    to: "/classifieds",
-    public: true,
-  },
-  {
-    label: "Notifications",
-    icon: Bell,
-    to: "/notifications",
-    public: false,
-  },
+  { label: "Home", icon: Home, to: "/", public: true },
+  { label: "Activities", icon: Target, to: "/campaigns", public: true },
+  { label: "Tasks", icon: List, to: "/tasks", public: true },
+  { label: "Leaderboard", icon: Trophy, to: "/leaderboard", public: true },
+  { label: "Wallet", icon: Wallet, to: "/wallet", public: false },
 ];
 
 export default function MobileTabBar() {

@@ -67,7 +67,7 @@ export default function About() {
               <Button 
                 size="lg" 
                 className="btn-primary shadow-button hover:shadow-button-hover"
-                onClick={() => navigate("/companies")}
+                onClick={() => navigate("/campaigns")}
               >
                 Explore Opportunities
                 <ArrowRight className="w-4 h-4 ml-2" />
@@ -75,7 +75,7 @@ export default function About() {
               <Button 
                 size="lg" 
                 variant="outline"
-                onClick={() => navigate("/profiles")}
+                onClick={() => navigate("/leaderboard")}
               >
                 Meet Our Community
               </Button>

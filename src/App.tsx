@@ -29,21 +29,15 @@ const DashboardPoints = lazy(() => import('@/pages/DashboardPoints'));
 const Tasks = lazy(() => import('@/pages/Tasks'));
 const TaskDetail = lazy(() => import('@/pages/TaskDetail'));
 const Task2Earn = lazy(() => import('@/pages/Task2Earn'));
-const Profiles = lazy(() => import('@/pages/Profiles'));
-const ProfileDetail = lazy(() => import('@/pages/ProfileDetail'));
-const ProfileEditPage = lazy(() => import('@/pages/ProfileEditPage'));
 const Packages = lazy(() => import('@/pages/Packages'));
 const ReferralDashboard = lazy(() => import('@/pages/ReferralDashboard'));
 const Wallet = lazy(() => import('@/pages/Wallet'));
 const SocialConnect = lazy(() => import('@/pages/SocialConnect'));
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'));
-const AdminIndex = lazy(() => import('@/pages/AdminIndex'));
 const AdminPanel = lazy(() => import('@/pages/AdminPanel'));
 const AdminDashboard = lazy(() => import('@/pages/AdminDashboard'));
 const AdminHome = lazy(() => import('@/pages/AdminHome'));
 const AdminUsers = lazy(() => import('@/pages/AdminUsers'));
-const AdminPosts = lazy(() => import('@/pages/AdminPosts'));
-const AdminComments = lazy(() => import('@/pages/AdminComments'));
 const AdminActivityLog = lazy(() => import('@/pages/AdminActivityLog'));
 const AdminEarnings = lazy(() => import('@/pages/AdminEarnings'));
 const AdminReports = lazy(() => import('@/pages/AdminReports'));
@@ -139,11 +133,6 @@ function App() {
                     <Route path="tasks/:id" element={<Layout><TaskDetail /></Layout>} />
                     <Route path="task2earn" element={<Layout><Task2Earn /></Layout>} />
 
-                    {/* Profiles Routes */}
-                    <Route path="profiles" element={<Layout><Profiles /></Layout>} />
-                    <Route path="profiles/:id" element={<Layout><ProfileDetail /></Layout>} />
-                    <Route path="profile/edit" element={<Layout><ProfileEditPage /></Layout>} />
-
                     {/* Other Routes */}
                     <Route path="packages" element={<Layout><Packages /></Layout>} />
                     <Route path="referrals" element={<Layout><ReferralDashboard /></Layout>} />
@@ -153,13 +142,11 @@ function App() {
 
                     {/* Admin Routes (role-gated via RequireAdmin) */}
                     <Route element={<RequireAdmin />}>
-                      <Route path="admin" element={<Layout><AdminIndex /></Layout>} />
+                      <Route path="admin" element={<Layout><AdminDashboard /></Layout>} />
                       <Route path="admin/panel" element={<Layout><AdminPanel /></Layout>} />
                       <Route path="admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
                       <Route path="admin/home" element={<Layout><AdminHome /></Layout>} />
                       <Route path="admin/users" element={<Layout><AdminUsers /></Layout>} />
-                      <Route path="admin/posts" element={<Layout><AdminPosts /></Layout>} />
-                      <Route path="admin/comments" element={<Layout><AdminComments /></Layout>} />
                       <Route path="admin/activity" element={<Layout><AdminActivityLog /></Layout>} />
                       <Route path="admin/earnings" element={<Layout><AdminEarnings /></Layout>} />
                       <Route path="admin/reports" element={<Layout><AdminReports /></Layout>} />

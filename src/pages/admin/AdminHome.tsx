@@ -4,19 +4,17 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 const sections = [
-  { path: "/admin/users", label: "Users" },
-  { path: "/admin/posts", label: "Posts" },
-  { path: "/admin/comments", label: "Comments" },
-  { path: "/admin/activity", label: "Activity Log" },
+  { path: "/admin/dashboard", label: "Dashboard" },
+  { path: "/admin/campaigns", label: "Campaigns" },
+  { path: "/admin/clients", label: "Advertisers" },
   { path: "/admin/tasks", label: "Tasks" },
-  { path: "/admin/roles", label: "User Roles" },
-  { path: "/admin/service-pricing", label: "Service Pricing" },
-  { path: "/admin/ledger", label: "Points Ledger" },
-  { path: "/admin/onboarding-tasks", label: "Onboarding Tasks" },
-  { path: "/admin/onboarding-completions", label: "Onboarding Completions" },
-  { path: "/admin/referrals", label: "User Referrals" },
-  { path: "/admin/reviews", label: "Reviews" },
   { path: "/admin/withdrawals", label: "Withdrawals" },
+  { path: "/admin/pro-upgrades", label: "Pro Upgrades" },
+  { path: "/admin/referrals", label: "User Referrals" },
+  { path: "/admin/teams", label: "Teams/Downlines" },
+  { path: "/admin/users", label: "Users" },
+  { path: "/admin/roles", label: "User Roles" },
+  { path: "/admin/activity", label: "Activity Log" },
 ];
 
 export default function AdminHome() {

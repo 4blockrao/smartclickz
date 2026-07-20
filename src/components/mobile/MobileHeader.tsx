@@ -205,7 +205,7 @@ export default function MobileHeader() {
                     variant="ghost"
                     className="w-full justify-start"
                     onClick={() => {
-                      navigate("/submit-classified");
+                      navigate("/create-campaign");
                       setIsMenuOpen(false);
                     }}
                   >
@@ -217,7 +217,7 @@ export default function MobileHeader() {
                     variant="ghost"
                     className="w-full justify-start"
                     onClick={() => {
-                      navigate("/profile/edit");
+                      navigate("/dashboard/settings");
                       setIsMenuOpen(false);
                     }}
                   >

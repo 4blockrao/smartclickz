@@ -154,7 +154,7 @@ const Header: React.FC = () => {
                     <Plus className="mr-2 h-4 w-4" />
                     <span>Connect Accounts</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/profile/edit")} className="text-white hover:bg-slate-700 cursor-pointer">
+                  <DropdownMenuItem onClick={() => navigate("/dashboard/settings")} className="text-white hover:bg-slate-700 cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
