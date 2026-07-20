@@ -14,7 +14,7 @@ export default function MobileDashboardNavigation() {
   
   const navigationItems = [
     { label: "Home", to: "/dashboard", icon: LayoutDashboard, exact: true },
-    { label: "Tasks", to: "/dashboard/tasks", icon: Target },
+    { label: "Tasks", to: "/tasks", icon: Target },
     { label: "Team", to: "/dashboard/team", icon: Users },
     { label: "Wallet", to: "/wallet", icon: Wallet },
   ];

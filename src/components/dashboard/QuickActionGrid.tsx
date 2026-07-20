@@ -29,7 +29,7 @@ const QuickActionGrid = () => {
       description: "Discover new earning opportunities",
       icon: Target,
       color: "from-blue-500 to-purple-500",
-      action: () => navigate("/dashboard/tasks"),
+      action: () => navigate("/tasks"),
       badge: "15 Available",
       badgeColor: "bg-blue-500"
     },
@@ -56,7 +56,7 @@ const QuickActionGrid = () => {
       description: "Claim your achievements",
       icon: Award,
       color: "from-yellow-500 to-orange-500",
-      action: () => navigate("/dashboard/points"),
+      action: () => navigate("/wallet"),
       badge: "2 Pending",
       badgeColor: "bg-yellow-500"
     },

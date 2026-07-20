@@ -22,12 +22,8 @@ const DashboardSettings = lazy(() => import('@/pages/DashboardSettings'));
 const DashboardSecurity = lazy(() => import('@/pages/DashboardSecurity'));
 const DashboardAccountSettings = lazy(() => import('@/pages/DashboardAccountSettings'));
 const DashboardPasswordChange = lazy(() => import('@/pages/DashboardPasswordChange'));
-const DashboardTasks = lazy(() => import('@/pages/DashboardTasks'));
 const DashboardTaskHistory = lazy(() => import('@/pages/DashboardTaskHistory'));
 const DashboardTeam = lazy(() => import('@/pages/DashboardTeam'));
-const DashboardPoints = lazy(() => import('@/pages/DashboardPoints'));
-const Tasks = lazy(() => import('@/pages/Tasks'));
-const TaskDetail = lazy(() => import('@/pages/TaskDetail'));
 const Task2Earn = lazy(() => import('@/pages/Task2Earn'));
 const Packages = lazy(() => import('@/pages/Packages'));
 const ReferralDashboard = lazy(() => import('@/pages/ReferralDashboard'));
@@ -113,10 +109,8 @@ function App() {
                       <Route path="security" element={<DashboardSecurity />} />
                       <Route path="account" element={<DashboardAccountSettings />} />
                       <Route path="password" element={<DashboardPasswordChange />} />
-                      <Route path="tasks" element={<DashboardTasks />} />
                       <Route path="task-history" element={<DashboardTaskHistory />} />
                       <Route path="team" element={<DashboardTeam />} />
-                      <Route path="points" element={<DashboardPoints />} />
                       <Route path="rank-progress" element={<DashboardRankProgress />} />
                       <Route path="royalty" element={<DashboardRoyalty />} />
                       <Route path="balanced-volume" element={<DashboardBalancedVolume />} />
@@ -128,10 +122,8 @@ function App() {
                     {/* Public routes with layout */}
                     <Route path="/" element={<Layout><Index /></Layout>} />
 
-                    {/* Tasks Routes */}
-                    <Route path="tasks" element={<Layout><Tasks /></Layout>} />
-                    <Route path="tasks/:id" element={<TaskDetail />} />
-                    <Route path="task2earn" element={<Layout><Task2Earn /></Layout>} />
+                    {/* Tasks (consolidated: browse + submit proof + history) */}
+                    <Route path="tasks" element={<Layout><Task2Earn /></Layout>} />
 
                     {/* Other Routes */}
                     <Route path="packages" element={<Layout><Packages /></Layout>} />

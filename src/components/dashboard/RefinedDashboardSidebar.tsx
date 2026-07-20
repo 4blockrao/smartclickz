@@ -61,7 +61,6 @@ const navigationGroups = [
     label: "Portfolio & Earnings",
     items: [
       { label: "Digital Wallet", to: "/wallet", icon: Wallet, badge: "Premium" },
-      { label: "Rewards Hub", to: "/dashboard/points", icon: Trophy },
       { label: "Investment Packages", to: "/packages", icon: Package },
       { label: "Auto Payouts", to: "/dashboard/payouts", icon: DollarSign, badge: "Pro" },
     ]
@@ -69,7 +68,7 @@ const navigationGroups = [
   {
     label: "Activities & Opportunities",
     items: [
-      { label: "Task Portfolio", to: "/dashboard/tasks", icon: Target },
+      { label: "Task Portfolio", to: "/tasks", icon: Target },
       { label: "Activity History", to: "/dashboard/task-history", icon: BarChart3 },
     ]
   },
