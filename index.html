@@ -53,35 +53,24 @@
 
     <!-- Enhanced Service Worker Registration -->
     <script>
+      // A prior cache-first service worker served stale JS chunks after deploys
+      // (causing "Importing a module script failed"). Do NOT register a SW.
+      // Instead, unregister any lingering one, clear its caches, and reload once
+      // so the page loads fresh from the network.
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js', {
-            scope: '/'
-          })
-          .then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            
-            // Check for updates
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New content available, show update notification
-                  if (confirm('New version available! Refresh to update?')) {
-                    window.location.reload();
-                  }
-                }
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          if (!regs.length) return;
+          Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+            if (window.caches) {
+              caches.keys().then(function (keys) {
+                keys.forEach(function (k) { caches.delete(k); });
               });
-            });
-          })
-          .catch(function(err) {
-            console.log('ServiceWorker registration failed: ', err);
+            }
+            if (!sessionStorage.getItem('sw-cleaned')) {
+              sessionStorage.setItem('sw-cleaned', '1');
+              window.location.reload();
+            }
           });
-        });
-        
-        // Listen for messages from service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          console.log('Message from service worker:', event.data);
         });
       }
 
