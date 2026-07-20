@@ -10,7 +10,7 @@ export default function DashboardSecurity() {
   const { user } = useAuth();
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 md:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Security</h1>
         <Button variant="outline">

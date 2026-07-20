@@ -58,13 +58,13 @@ export default function UnifiedDashboardLayout() {
   // Desktop layout - elegant and modern
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
         <RefinedDashboardSidebar />
-        
+
         <div className="flex-1 flex flex-col min-w-0 w-full">
           <RefinedDashboardHeader />
-          
-          <main className="flex-1 overflow-auto w-full">
+
+          <main className="flex-1 overflow-auto w-full text-white">
             <Outlet />
           </main>
         </div>
