@@ -1,283 +1,221 @@
-
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { 
-  TrendingUp, 
-  Users, 
-  Target, 
-  Award, 
-  Zap, 
-  DollarSign,
-  Activity,
-  Sparkles,
-  Star,
-  Trophy
-} from "lucide-react";
-import { motion } from "framer-motion";
-import DashboardStatsGrid from "@/components/dashboard/DashboardStatsGrid";
-import QuickActionGrid from "@/components/dashboard/QuickActionGrid";
-import DashboardEarningSummary from "@/components/dashboard/DashboardEarningSummary";
-import DashboardPackagePerformance from "@/components/dashboard/DashboardPackagePerformance";
 import { usePointsWallet } from "@/hooks/usePointsWallet";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  Target,
+  Users,
+  Flame,
+  Award,
+  ArrowUpRight,
+  ArrowDownRight,
+  Megaphone,
+  UserPlus,
+  Wallet,
+  ChevronRight,
+  Sparkles,
+} from "lucide-react";
+
+const POINTS_TO_USD = 0.01;
 
 const ModernDashboard: React.FC = () => {
   const { user, userProfile } = useAuth();
   const { pointsBalance } = usePointsWallet(user?.id);
+  const navigate = useNavigate();
 
-  // Fetch comprehensive dashboard data
-  const { data: dashboardData, isLoading } = useQuery({
-    queryKey: ["modern-dashboard", user?.id],
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-home", user?.id],
+    enabled: !!user,
     queryFn: async () => {
-      if (!user) return null;
-      
       const [profileRes, statsRes, tasksRes, pointsRes] = await Promise.all([
-        supabase.from("profiles").select("*").eq("user_id", user.id).single(),
-        supabase.from("user_stats").select("*").eq("user_id", user.id).single(),
-        supabase.from("tasks").select("*").eq("is_active", true).limit(5),
-        supabase.from("points_ledger").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(10)
+        supabase.from("profiles").select("*").eq("user_id", user!.id).maybeSingle(),
+        supabase.from("user_stats").select("*").eq("user_id", user!.id).maybeSingle(),
+        supabase.from("tasks").select("id,title,payout_points,type").eq("is_active", true).order("created_at", { ascending: false }).limit(4),
+        supabase.from("points_ledger").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }).limit(6),
       ]);
-
       return {
         profile: profileRes.data,
         stats: statsRes.data,
-        activeTasks: tasksRes.data || [],
-        recentPoints: pointsRes.data || []
+        tasks: tasksRes.data || [],
+        recent: pointsRes.data || [],
       };
     },
-    enabled: !!user,
   });
+
+  const profile = data?.profile || userProfile;
+  const firstName = profile?.display_name?.split(" ")[0] || "there";
+  const team = (profile?.team_level1 || 0) + (profile?.team_level2 || 0) + (profile?.team_level3 || 0);
+  const streak = data?.stats?.current_streak || 0;
+  const level = Math.floor((pointsBalance || 0) / 1000) + 1;
+  const activeTasks = data?.tasks?.length || 0;
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
-        <motion.div 
-          className="text-center space-y-4 w-full max-w-sm"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="relative mx-auto w-16 h-16">
-            <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
-            <Sparkles className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-purple-400" />
-          </div>
-          <h3 className="text-xl font-semibold text-white">Loading Dashboard</h3>
-          <p className="text-slate-400 text-sm">Preparing your workspace...</p>
-        </motion.div>
+      <div className="flex items-center justify-center py-32">
+        <div className="h-10 w-10 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
       </div>
     );
   }
 
-  const profile = dashboardData?.profile || userProfile;
-  const stats = dashboardData?.stats;
+  const stats = [
+    { label: "Active tasks", value: activeTasks, icon: Target, tint: "text-sky-400 bg-sky-400/10" },
+    { label: "Team", value: team, icon: Users, tint: "text-violet-400 bg-violet-400/10" },
+    { label: "Day streak", value: streak, icon: Flame, tint: "text-amber-400 bg-amber-400/10" },
+    { label: "Level", value: level, icon: Award, tint: "text-emerald-400 bg-emerald-400/10" },
+  ];
+
+  const actions = [
+    { label: "Do tasks", icon: Target, to: "/tasks", tint: "from-sky-500 to-blue-600" },
+    { label: "Campaigns", icon: Megaphone, to: "/campaigns", tint: "from-violet-500 to-purple-600" },
+    { label: "Refer & earn", icon: UserPlus, to: "/referrals", tint: "from-emerald-500 to-green-600" },
+    { label: "Wallet", icon: Wallet, to: "/wallet", tint: "from-amber-500 to-orange-600" },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20"></div>
-        <div className="relative px-4 sm:px-6 py-6 sm:py-8">
-          <motion.div 
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                  Welcome back, {profile?.display_name?.split(' ')[0] || "Networker"}! 
-                </h1>
-                <motion.div
-                  animate={{ rotate: [0, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="text-xl sm:text-2xl"
-                >
-                  👋
-                </motion.div>
-              </div>
-              <p className="text-slate-300 text-sm sm:text-base mb-4">
-                Your network is your net worth. Let's grow it together!
-              </p>
-              
-              <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
-                <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white border-0 px-3 py-1.5 text-xs">
-                  <Star className="w-3 h-3 mr-1" />
-                  Level {stats?.level || 1}
-                </Badge>
-                <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 px-3 py-1.5 text-xs">
-                  <Zap className="w-3 h-3 mr-1" />
-                  {pointsBalance || 0} Points
-                </Badge>
-                <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white border-0 px-3 py-1.5 text-xs">
-                  <Trophy className="w-3 h-3 mr-1" />
-                  {stats?.current_streak || 0} Day Streak
-                </Badge>
-              </div>
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+      {/* Greeting */}
+      <div>
+        <p className="text-sm text-slate-400">{greeting},</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{firstName} 👋</h1>
+      </div>
+
+      {/* Balance hero */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600 via-indigo-600 to-blue-600 p-6 sm:p-7 shadow-xl shadow-indigo-900/30"
+      >
+        <div className="absolute -right-8 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -right-2 bottom-0 h-24 w-24 rounded-full bg-white/10 blur-xl" />
+        <div className="relative">
+          <div className="flex items-center gap-2 text-white/80 text-sm">
+            <Sparkles className="h-4 w-4" /> Points balance
+          </div>
+          <div className="mt-2 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            {pointsBalance.toLocaleString()}
+          </div>
+          <div className="mt-1 text-white/70 text-sm">≈ ${(pointsBalance * POINTS_TO_USD).toFixed(2)} USD</div>
+
+          <div className="mt-5 flex gap-3">
+            <button
+              onClick={() => navigate("/tasks")}
+              className="flex-1 min-h-[44px] rounded-2xl bg-white text-indigo-700 font-semibold text-sm hover:bg-white/90 active:scale-[0.98] transition"
+            >
+              Earn points
+            </button>
+            <button
+              onClick={() => navigate("/dashboard/withdrawal")}
+              className="flex-1 min-h-[44px] rounded-2xl bg-white/15 text-white font-semibold text-sm backdrop-blur hover:bg-white/25 active:scale-[0.98] transition"
+            >
+              Withdraw
+            </button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Stat chips */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-2xl bg-white/[0.04] border border-white/10 p-4">
+            <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${s.tint}`}>
+              <s.icon className="h-5 w-5" />
             </div>
-            
-            {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              {[
-                { 
-                  label: "Today's Earnings", 
-                  value: "$24.50", 
-                  icon: DollarSign, 
-                  color: "from-green-500 to-emerald-500",
-                  change: "+12%"
-                },
-                { 
-                  label: "Active Tasks", 
-                  value: dashboardData?.activeTasks?.length || 0, 
-                  icon: Target, 
-                  color: "from-blue-500 to-purple-500",
-                  change: "3 new"
-                },
-                { 
-                  label: "Team Members", 
-                  value: (profile?.team_level1 || 0) + (profile?.team_level2 || 0), 
-                  icon: Users, 
-                  color: "from-purple-500 to-pink-500",
-                  change: "+2 this week"
-                },
-                { 
-                  label: "Success Rate", 
-                  value: `${stats?.success_rate || 95}%`, 
-                  icon: TrendingUp, 
-                  color: "from-orange-500 to-red-500",
-                  change: "+5%"
-                }
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/15 transition-all duration-300">
-                    <CardContent className="p-3 sm:p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r ${stat.color} flex items-center justify-center`}>
-                          <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                        </div>
-                        <span className="text-xs text-green-400">{stat.change}</span>
-                      </div>
-                      <div className="text-lg sm:text-xl font-bold text-white mb-1">{stat.value}</div>
-                      <div className="text-xs text-slate-300 leading-tight">{stat.label}</div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            <div className="mt-3 text-2xl font-bold text-white leading-none">{s.value}</div>
+            <div className="mt-1 text-xs text-slate-400">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick actions */}
+      <div>
+        <h2 className="text-sm font-semibold text-slate-300 mb-3">Quick actions</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {actions.map((a) => (
+            <button
+              key={a.label}
+              onClick={() => navigate(a.to)}
+              className="group rounded-2xl bg-white/[0.04] border border-white/10 p-4 text-left hover:bg-white/[0.07] active:scale-[0.98] transition min-h-[92px] flex flex-col justify-between"
+            >
+              <div className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${a.tint} flex items-center justify-center shadow-lg`}>
+                <a.icon className="h-5 w-5 text-white" />
+              </div>
+              <span className="mt-3 text-sm font-medium text-white flex items-center justify-between">
+                {a.label}
+                <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-white transition" />
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Main Content - Removed Tabs */}
-      <div className="px-4 sm:px-6 pb-8 sm:pb-12 space-y-6">
-        {/* Enhanced Stats Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <DashboardStatsGrid />
-        </motion.div>
-        
-        {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Quick Actions */}
-          <motion.div 
-            className="lg:col-span-2 space-y-6"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <QuickActionGrid />
-            
-            {/* Earnings and Package Performance */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              <DashboardEarningSummary />
-              <DashboardPackagePerformance />
+      {/* Two-column on desktop, stacked on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Available tasks */}
+        <section className="rounded-3xl bg-white/[0.04] border border-white/10 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-semibold text-white">Available tasks</h2>
+            <button onClick={() => navigate("/tasks")} className="text-xs text-violet-400 hover:text-violet-300">
+              View all
+            </button>
+          </div>
+          {data?.tasks.length === 0 ? (
+            <p className="text-sm text-slate-500 py-6 text-center">No tasks right now — check back soon.</p>
+          ) : (
+            <div className="space-y-2">
+              {data?.tasks.map((t: any) => (
+                <button
+                  key={t.id}
+                  onClick={() => navigate("/tasks")}
+                  className="w-full flex items-center gap-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.99] transition p-3 text-left min-h-[56px]"
+                >
+                  <div className="h-9 w-9 rounded-xl bg-sky-400/10 text-sky-400 flex items-center justify-center shrink-0">
+                    <Target className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium text-white truncate">{t.title}</div>
+                    <div className="text-xs text-slate-500 capitalize">{(t.type || "task").replace(/_/g, " ")}</div>
+                  </div>
+                  <span className="text-sm font-semibold text-emerald-400 shrink-0">+{t.payout_points}</span>
+                </button>
+              ))}
             </div>
-          </motion.div>
-          
-          {/* Right Column - Activity Feed & Recent Activity */}
-          <motion.div
-            className="space-y-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            {/* Recent Activity */}
-            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-blue-400" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {dashboardData?.recentPoints?.slice(0, 5).map((entry, index) => (
-                  <div key={entry.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        entry.type === 'reward' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {entry.type === 'reward' ? <Award className="w-4 h-4" /> : <Target className="w-4 h-4" />}
-                      </div>
-                      <div>
-                        <div className="text-white text-sm font-medium">
-                          {entry.note || entry.event_code}
-                        </div>
-                        <div className="text-slate-400 text-xs">
-                          {new Date(entry.created_at).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`font-bold text-sm ${
-                      entry.type === 'reward' ? 'text-green-400' : 'text-red-400'
-                    }`}>
-                      {entry.type === 'reward' ? '+' : '-'}{entry.amount}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+          )}
+        </section>
 
-            {/* Quick Tasks */}
-            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Target className="w-5 h-5 text-purple-400" />
-                  Quick Tasks
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {dashboardData?.activeTasks?.slice(0, 3).map((task, index) => (
-                  <div key={task.id} className="p-3 bg-white/5 rounded-lg border border-white/10">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-white font-medium text-sm">{task.title}</h4>
-                      <Badge className="bg-blue-500/20 text-blue-400 text-xs">
-                        +{task.payout_points}
-                      </Badge>
+        {/* Recent activity */}
+        <section className="rounded-3xl bg-white/[0.04] border border-white/10 p-5">
+          <h2 className="text-base font-semibold text-white mb-4">Recent activity</h2>
+          {data?.recent.length === 0 ? (
+            <p className="text-sm text-slate-500 py-6 text-center">No activity yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {data?.recent.map((e: any) => {
+                const positive = e.type === "reward";
+                return (
+                  <div key={e.id} className="flex items-center gap-3 rounded-2xl bg-white/[0.03] p-3 min-h-[56px]">
+                    <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${positive ? "bg-emerald-400/10 text-emerald-400" : "bg-rose-400/10 text-rose-400"}`}>
+                      {positive ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
                     </div>
-                    <p className="text-slate-300 text-xs mb-2 line-clamp-2">{task.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-xs capitalize">{task.type}</span>
-                      <button className="text-xs text-blue-400 hover:text-blue-300">
-                        Start Task →
-                      </button>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium text-white truncate">{e.note || e.event_code}</div>
+                      <div className="text-xs text-slate-500">{e.created_at ? new Date(e.created_at).toLocaleDateString() : "—"}</div>
                     </div>
+                    <span className={`text-sm font-semibold shrink-0 ${positive ? "text-emerald-400" : "text-rose-400"}`}>
+                      {positive ? "+" : "-"}{e.amount}
+                    </span>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
