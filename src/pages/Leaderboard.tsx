@@ -114,28 +114,6 @@ const Leaderboard: React.FC = () => {
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
               Compete with top earners worldwide and climb the ranks
             </p>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              {[
-                { label: "Total Competitors", value: "2.5M+", icon: Users },
-                { label: "Active This Month", value: "847K", icon: Calendar },
-                { label: "Tasks Completed", value: "15.2M", icon: Target },
-                { label: "Total Rewards", value: "$2.8M", icon: Zap }
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20"
-                >
-                  <stat.icon className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-lg font-bold text-white">{stat.value}</div>
-                  <div className="text-xs text-slate-300">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>
@@ -143,28 +121,6 @@ const Leaderboard: React.FC = () => {
       {/* Main Content */}
       <div className="px-4 sm:px-6 pb-8">
         <div className="max-w-6xl mx-auto">
-          {/* Filters */}
-          <div className="mb-8">
-            <Tabs value={timeFrame} onValueChange={setTimeFrame} className="mb-4">
-              <TabsList className="grid grid-cols-4 bg-white/10 backdrop-blur-lg border-white/20">
-                <TabsTrigger value="daily" className="data-[state=active]:bg-purple-600">Daily</TabsTrigger>
-                <TabsTrigger value="weekly" className="data-[state=active]:bg-purple-600">Weekly</TabsTrigger>
-                <TabsTrigger value="monthly" className="data-[state=active]:bg-purple-600">Monthly</TabsTrigger>
-                <TabsTrigger value="alltime" className="data-[state=active]:bg-purple-600">All Time</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <Tabs value={category} onValueChange={setCategory}>
-              <TabsList className="grid grid-cols-5 bg-white/10 backdrop-blur-lg border-white/20">
-                <TabsTrigger value="overall" className="data-[state=active]:bg-purple-600">Overall</TabsTrigger>
-                <TabsTrigger value="tasks" className="data-[state=active]:bg-purple-600">Tasks</TabsTrigger>
-                <TabsTrigger value="earnings" className="data-[state=active]:bg-purple-600">Earnings</TabsTrigger>
-                <TabsTrigger value="streak" className="data-[state=active]:bg-purple-600">Streak</TabsTrigger>
-                <TabsTrigger value="referrals" className="data-[state=active]:bg-purple-600">Referrals</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-
           {/* Top 3 Podium */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">🏆 Hall of Fame</h2>

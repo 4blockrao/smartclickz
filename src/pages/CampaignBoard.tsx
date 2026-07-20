@@ -140,10 +140,6 @@ const CampaignBoard: React.FC = () => {
                     className="pl-10 bg-white/10 backdrop-blur-lg border-white/20 text-white placeholder:text-slate-400"
                   />
                 </div>
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  <Filter className="w-4 h-4 mr-2" />
-                  Filter
-                </Button>
               </div>
             </div>
           </motion.div>
