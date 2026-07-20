@@ -10,7 +10,7 @@ export default function AuthHeader() {
         <TrendingUp className="text-white w-6 h-6" />
       </div>
       <span className="font-bold text-3xl text-gray-900 tracking-tight">
-        socioAI
+        SmartClicks
       </span>
     </header>
   );

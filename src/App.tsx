@@ -130,13 +130,13 @@ function App() {
 
                     {/* Tasks Routes */}
                     <Route path="tasks" element={<Layout><Tasks /></Layout>} />
-                    <Route path="tasks/:id" element={<Layout><TaskDetail /></Layout>} />
+                    <Route path="tasks/:id" element={<TaskDetail />} />
                     <Route path="task2earn" element={<Layout><Task2Earn /></Layout>} />
 
                     {/* Other Routes */}
                     <Route path="packages" element={<Layout><Packages /></Layout>} />
                     <Route path="referrals" element={<Layout><ReferralDashboard /></Layout>} />
-                    <Route path="wallet" element={<Layout><Wallet /></Layout>} />
+                    <Route path="wallet" element={<Wallet />} />
                     <Route path="social-connect" element={<Layout><SocialConnect /></Layout>} />
                     <Route path="leaderboard" element={<Layout><Leaderboard /></Layout>} />
 
@@ -159,13 +159,13 @@ function App() {
                       <Route path="admin/clients" element={<Layout><AdminClients /></Layout>} />
                       <Route path="admin/roles" element={<Layout><ManageRoles /></Layout>} />
                     </Route>
-                    <Route path="dashboard/withdrawal" element={<Layout><DashboardWithdrawal /></Layout>} />
+                    <Route path="dashboard/withdrawal" element={<DashboardWithdrawal />} />
 
                     {/* Client/Campaign Routes */}
                     <Route path="client" element={<Layout><ClientDashboard /></Layout>} />
-                    <Route path="create-campaign" element={<Layout><CreateCampaign /></Layout>} />
+                    <Route path="create-campaign" element={<CreateCampaign />} />
                     <Route path="campaigns" element={<Layout><CampaignBoard /></Layout>} />
-                    <Route path="campaigns/:id" element={<Layout><CampaignDetailNew /></Layout>} />
+                    <Route path="campaigns/:id" element={<CampaignDetailNew />} />
 
                     {/* Static Pages */}
                     <Route path="about" element={<Layout><About /></Layout>} />

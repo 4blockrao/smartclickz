@@ -1,5 +1,4 @@
 
-import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ export default function About() {
   ];
 
   return (
-    <Layout>
+    <>
       <div className="w-full">
         {/* Hero Section */}
         <section className="section-spacing bg-gradient-to-br from-background via-primary/5 to-accent-green/5">
@@ -256,6 +255,6 @@ export default function About() {
           </div>
         </section>
       </div>
-    </Layout>
+    </>
   );
 }

@@ -6,7 +6,6 @@ import { toast } from "@/components/ui/use-toast";
 
 import OtpVerification from "@/components/OtpVerification";
 import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupForm";
 import SignupFormMultiStep from "@/components/auth/SignupFormMultiStep";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
@@ -42,19 +41,15 @@ const Auth = () => {
   // Enhanced auth redirect logic - FIXED to prevent auto-login from copied URLs
   useEffect(() => {
     if (!authLoading) {
-      // Only redirect if user has a valid active session AND we're not showing auth forms
-      if (session && user && currentView !== "account") {
-        // Check if this is a fresh session (not from a copied URL)
+      // Don't auto-redirect while the user is mid-flow on these views — a session
+      // may legitimately exist (e.g. the recovery session during password reset).
+      const stayViews = ["account", "reset_password", "otp", "forgot_password"];
+      if (session && user && !stayViews.includes(currentView)) {
         const sessionAge = session.expires_at ? (session.expires_at * 1000) - Date.now() : 0;
-        const isValidSession = sessionAge > 0;
-        
-        if (isValidSession) {
+        if (sessionAge > 0) {
           const from = location.state?.from || "/dashboard";
-          console.log('Valid session found, redirecting to:', from);
           navigate(from, { replace: true });
         } else {
-          // Session expired, clear it and show login
-          console.log('Session expired, clearing auth state');
           logout();
           setCurrentView("login");
         }
@@ -63,13 +58,11 @@ const Auth = () => {
   }, [session, user, authLoading, navigate, location.state, currentView]);
 
   const handleLoginSuccess = () => {
-    console.log('Login successful, navigating to dashboard');
     const from = location.state?.from || "/dashboard";
     navigate(from, { replace: true });
   };
 
   const handleSignupSuccess = (email: string) => {
-    console.log('Signup successful for:', email);
     toast({
       title: "Account created!",
       description: "You are now signed in.",
@@ -146,7 +139,7 @@ const Auth = () => {
     }
 
     if (currentView === "reset_password") {
-      return <ResetPasswordForm onPasswordSet={handlePasswordSet} />;
+      return <ResetPasswordForm onPasswordSet={handlePasswordSet} onBack={() => setCurrentView("login")} />;
     }
 
     if (currentView === "forgot_password") {

@@ -1,5 +1,4 @@
 
-import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,8 +72,7 @@ export default function Help() {
   ];
 
   return (
-    <Layout>
-      <div className="w-full">
+    <div className="w-full">
         <section className="section-spacing">
           <div className="container-modern max-w-6xl">
             <div className="text-center mb-12">
@@ -176,6 +174,5 @@ export default function Help() {
           </div>
         </section>
       </div>
-    </Layout>
   );
 }

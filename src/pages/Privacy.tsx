@@ -1,5 +1,4 @@
 
-import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Lock, Eye, FileText } from "lucide-react";
 
@@ -48,7 +47,7 @@ export default function Privacy() {
   ];
 
   return (
-    <Layout>
+    <>
       <div className="w-full">
         <section className="section-spacing">
           <div className="container-modern max-w-4xl">
@@ -108,6 +107,6 @@ export default function Privacy() {
           </div>
         </section>
       </div>
-    </Layout>
+    </>
   );
 }
