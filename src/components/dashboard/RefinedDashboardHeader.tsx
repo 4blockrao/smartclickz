@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { usePointsWallet } from "@/hooks/usePointsWallet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,20 +31,31 @@ export default function RefinedDashboardHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const isDashboardHome = location.pathname === '/dashboard';
-  
+  const { pointsBalance } = usePointsWallet(user?.id);
+
   const handleLogout = async () => {
     await logout();
     navigate("/auth", { replace: true });
   };
 
   const getPageTitle = () => {
-    const path = location.pathname;
-    if (path === '/dashboard') return 'Command Center';
-    if (path.includes('/team')) return 'Team Management';
-    if (path.includes('/tasks')) return 'Task Portfolio';
-    if (path.includes('/points')) return 'Rewards Center';
-    if (path.includes('/onboarding')) return 'Getting Started';
+    const p = location.pathname;
+    if (p === '/dashboard') return 'Command Center';
+    if (p.startsWith('/wallet')) return 'Wallet';
+    if (p.startsWith('/tasks')) return 'Tasks';
+    if (p.startsWith('/create-campaign')) return 'Create Campaign';
+    if (p.startsWith('/campaigns')) return 'Campaigns';
+    if (p.startsWith('/client')) return 'Advertiser Dashboard';
+    if (p.startsWith('/packages')) return 'Packages';
+    if (p.startsWith('/referrals')) return 'Referrals';
+    if (p.startsWith('/leaderboard')) return 'Leaderboard';
+    if (p.startsWith('/social-connect')) return 'Connect Accounts';
+    if (p.startsWith('/admin')) return 'Admin';
+    if (p.includes('/team')) return 'Team Management';
+    if (p.includes('/task-history')) return 'Activity History';
+    if (p.includes('/withdrawal')) return 'Withdraw';
+    if (p.includes('/profile')) return 'Profile';
+    if (p.includes('/settings') || p.includes('/account')) return 'Settings';
     return 'Dashboard';
   };
 
@@ -98,7 +110,7 @@ export default function RefinedDashboardHeader() {
           {/* Enhanced Points Badge */}
           <Badge className="hidden sm:flex bg-gradient-to-r from-emerald-600 to-green-600 text-white border-0 font-bold px-4 py-2 text-sm shadow-lg shadow-green-500/30 hover:shadow-xl transition-all hover:scale-105">
             <Diamond className="w-4 h-4 mr-2" />
-            1,250 pts
+            {pointsBalance.toLocaleString()} pts
           </Badge>
 
           {/* Back to Public Site */}

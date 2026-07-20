@@ -45,26 +45,7 @@ const Wallet: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <div className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20"></div>
-        <div className="relative px-4 sm:px-6 py-6">
-          <div className="flex items-center gap-4 mb-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="text-white hover:bg-white/10">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          </div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-2">
-              Your Wallet
-            </h1>
-            <p className="text-slate-300 text-sm sm:text-base">Track your points, earnings and withdrawals</p>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="px-4 sm:px-6 py-6">
+      <div className="px-4 sm:px-6 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Metrics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

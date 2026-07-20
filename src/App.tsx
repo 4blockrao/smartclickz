@@ -101,65 +101,62 @@ function App() {
                     {/* Public auth route */}
                     <Route path="/auth" element={<Auth />} />
 
-                    {/* Dashboard routes with auth protection */}
-                    <Route path="/dashboard" element={<UnifiedDashboardLayout />}>
-                      <Route index element={<ModernDashboard />} />
-                      <Route path="profile" element={<DashboardProfile />} />
-                      <Route path="settings" element={<DashboardSettings />} />
-                      <Route path="security" element={<DashboardSecurity />} />
-                      <Route path="account" element={<DashboardAccountSettings />} />
-                      <Route path="password" element={<DashboardPasswordChange />} />
-                      <Route path="task-history" element={<DashboardTaskHistory />} />
-                      <Route path="team" element={<DashboardTeam />} />
-                      <Route path="rank-progress" element={<DashboardRankProgress />} />
-                      <Route path="royalty" element={<DashboardRoyalty />} />
-                      <Route path="balanced-volume" element={<DashboardBalancedVolume />} />
-                      <Route path="campaign-analytics" element={<DashboardCampaignAnalytics />} />
-                      <Route path="leadership" element={<DashboardLeadership />} />
-                      <Route path="payouts" element={<DashboardPayouts />} />
+                    {/* ===== Authenticated app shell: ONE sidebar + header for every logged-in page ===== */}
+                    <Route element={<UnifiedDashboardLayout />}>
+                      {/* Dashboard */}
+                      <Route path="dashboard" element={<ModernDashboard />} />
+                      <Route path="dashboard/profile" element={<DashboardProfile />} />
+                      <Route path="dashboard/settings" element={<DashboardSettings />} />
+                      <Route path="dashboard/security" element={<DashboardSecurity />} />
+                      <Route path="dashboard/account" element={<DashboardAccountSettings />} />
+                      <Route path="dashboard/password" element={<DashboardPasswordChange />} />
+                      <Route path="dashboard/task-history" element={<DashboardTaskHistory />} />
+                      <Route path="dashboard/team" element={<DashboardTeam />} />
+                      <Route path="dashboard/rank-progress" element={<DashboardRankProgress />} />
+                      <Route path="dashboard/royalty" element={<DashboardRoyalty />} />
+                      <Route path="dashboard/balanced-volume" element={<DashboardBalancedVolume />} />
+                      <Route path="dashboard/campaign-analytics" element={<DashboardCampaignAnalytics />} />
+                      <Route path="dashboard/leadership" element={<DashboardLeadership />} />
+                      <Route path="dashboard/payouts" element={<DashboardPayouts />} />
+                      <Route path="dashboard/withdrawal" element={<DashboardWithdrawal />} />
+
+                      {/* Earn / portal */}
+                      <Route path="tasks" element={<Task2Earn />} />
+                      <Route path="packages" element={<Packages />} />
+                      <Route path="referrals" element={<ReferralDashboard />} />
+                      <Route path="wallet" element={<Wallet />} />
+                      <Route path="social-connect" element={<SocialConnect />} />
+                      <Route path="leaderboard" element={<Leaderboard />} />
+
+                      {/* Advertiser */}
+                      <Route path="client" element={<ClientDashboard />} />
+                      <Route path="create-campaign" element={<CreateCampaign />} />
+                      <Route path="campaigns" element={<CampaignBoard />} />
+                      <Route path="campaigns/:id" element={<CampaignDetailNew />} />
+
+                      {/* Admin (role-gated) */}
+                      <Route element={<RequireAdmin />}>
+                        <Route path="admin" element={<AdminDashboard />} />
+                        <Route path="admin/panel" element={<AdminPanel />} />
+                        <Route path="admin/dashboard" element={<AdminDashboard />} />
+                        <Route path="admin/home" element={<AdminHome />} />
+                        <Route path="admin/users" element={<AdminUsers />} />
+                        <Route path="admin/activity" element={<AdminActivityLog />} />
+                        <Route path="admin/earnings" element={<AdminEarnings />} />
+                        <Route path="admin/reports" element={<AdminReports />} />
+                        <Route path="admin/referrals" element={<AdminReferrals />} />
+                        <Route path="admin/tasks" element={<AdminTasks />} />
+                        <Route path="admin/teams" element={<AdminTeams />} />
+                        <Route path="admin/withdrawals" element={<AdminWithdrawals />} />
+                        <Route path="admin/campaigns" element={<AdminCampaigns />} />
+                        <Route path="admin/pro-upgrades" element={<AdminProUpgrades />} />
+                        <Route path="admin/clients" element={<AdminClients />} />
+                        <Route path="admin/roles" element={<ManageRoles />} />
+                      </Route>
                     </Route>
 
-                    {/* Public routes with layout */}
+                    {/* ===== Public (marketing shell) ===== */}
                     <Route path="/" element={<Layout><Index /></Layout>} />
-
-                    {/* Tasks (consolidated: browse + submit proof + history) */}
-                    <Route path="tasks" element={<Layout><Task2Earn /></Layout>} />
-
-                    {/* Other Routes */}
-                    <Route path="packages" element={<Layout><Packages /></Layout>} />
-                    <Route path="referrals" element={<Layout><ReferralDashboard /></Layout>} />
-                    <Route path="wallet" element={<Wallet />} />
-                    <Route path="social-connect" element={<Layout><SocialConnect /></Layout>} />
-                    <Route path="leaderboard" element={<Layout><Leaderboard /></Layout>} />
-
-                    {/* Admin Routes (role-gated via RequireAdmin) */}
-                    <Route element={<RequireAdmin />}>
-                      <Route path="admin" element={<Layout><AdminDashboard /></Layout>} />
-                      <Route path="admin/panel" element={<Layout><AdminPanel /></Layout>} />
-                      <Route path="admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
-                      <Route path="admin/home" element={<Layout><AdminHome /></Layout>} />
-                      <Route path="admin/users" element={<Layout><AdminUsers /></Layout>} />
-                      <Route path="admin/activity" element={<Layout><AdminActivityLog /></Layout>} />
-                      <Route path="admin/earnings" element={<Layout><AdminEarnings /></Layout>} />
-                      <Route path="admin/reports" element={<Layout><AdminReports /></Layout>} />
-                      <Route path="admin/referrals" element={<Layout><AdminReferrals /></Layout>} />
-                      <Route path="admin/tasks" element={<Layout><AdminTasks /></Layout>} />
-                      <Route path="admin/teams" element={<Layout><AdminTeams /></Layout>} />
-                      <Route path="admin/withdrawals" element={<Layout><AdminWithdrawals /></Layout>} />
-                      <Route path="admin/campaigns" element={<Layout><AdminCampaigns /></Layout>} />
-                      <Route path="admin/pro-upgrades" element={<Layout><AdminProUpgrades /></Layout>} />
-                      <Route path="admin/clients" element={<Layout><AdminClients /></Layout>} />
-                      <Route path="admin/roles" element={<Layout><ManageRoles /></Layout>} />
-                    </Route>
-                    <Route path="dashboard/withdrawal" element={<DashboardWithdrawal />} />
-
-                    {/* Client/Campaign Routes */}
-                    <Route path="client" element={<Layout><ClientDashboard /></Layout>} />
-                    <Route path="create-campaign" element={<CreateCampaign />} />
-                    <Route path="campaigns" element={<Layout><CampaignBoard /></Layout>} />
-                    <Route path="campaigns/:id" element={<CampaignDetailNew />} />
-
-                    {/* Static Pages */}
                     <Route path="about" element={<Layout><About /></Layout>} />
                     <Route path="help" element={<Layout><Help /></Layout>} />
                     <Route path="contact" element={<Layout><Contact /></Layout>} />
