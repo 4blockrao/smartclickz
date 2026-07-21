@@ -23,7 +23,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export default function DashboardTeam() {
   const { user } = useAuth();
@@ -109,9 +108,7 @@ export default function DashboardTeam() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background">
-      <DashboardHeader userProfile={null} showBackButton />
-      
+    <div className="min-h-screen">
       <main className="container mx-auto px-4 py-6 space-y-6 max-w-4xl">
         {/* Header Section */}
         <div className="flex items-center gap-3">

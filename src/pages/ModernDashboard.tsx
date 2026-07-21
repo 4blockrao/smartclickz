@@ -63,13 +63,6 @@ const ModernDashboard: React.FC = () => {
     );
   }
 
-  const stats = [
-    { label: "Active tasks", value: activeTasks, icon: Target, tint: "text-sky-400 bg-sky-400/10" },
-    { label: "Team", value: team, icon: Users, tint: "text-violet-400 bg-violet-400/10" },
-    { label: "Day streak", value: streak, icon: Flame, tint: "text-amber-400 bg-amber-400/10" },
-    { label: "Level", value: level, icon: Award, tint: "text-emerald-400 bg-emerald-400/10" },
-  ];
-
   const actions = [
     { label: "Do tasks", icon: Target, to: "/tasks", tint: "from-sky-500 to-blue-600" },
     { label: "Campaigns", icon: Megaphone, to: "/campaigns", tint: "from-violet-500 to-purple-600" },
@@ -119,19 +112,6 @@ const ModernDashboard: React.FC = () => {
           </div>
         </div>
       </motion.div>
-
-      {/* Stat chips */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        {stats.map((s) => (
-          <div key={s.label} className="rounded-2xl bg-white/[0.04] border border-white/10 p-4">
-            <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${s.tint}`}>
-              <s.icon className="h-5 w-5" />
-            </div>
-            <div className="mt-3 text-2xl font-bold text-white leading-none">{s.value}</div>
-            <div className="mt-1 text-xs text-slate-400">{s.label}</div>
-          </div>
-        ))}
-      </div>
 
       {/* Quick actions */}
       <div>

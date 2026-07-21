@@ -50,8 +50,7 @@ export default function MobileHeader() {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-lg font-semibold">{formattedTitle}</h1>
-          
+
           <div className="ml-auto flex items-center gap-2">
             <Button 
               variant="ghost" 
