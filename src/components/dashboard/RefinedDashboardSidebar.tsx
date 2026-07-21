@@ -1,4 +1,3 @@
-
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -12,25 +11,15 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, 
-  Target, 
-  Users, 
-  Briefcase, 
-  MessageSquare, 
-  Calendar,
-  CheckSquare,
+  LayoutDashboard,
+  Target,
+  Users,
   Trophy,
-  Home,
   Wallet,
   BarChart3,
   Package,
-  TrendingUp,
   Award,
-  FileText,
   Settings,
-  Eye,
-  Search,
-  Building,
   Megaphone,
   UserPlus,
   Crown,
@@ -39,71 +28,63 @@ import {
   Star,
   DollarSign,
   Sparkles,
-  Diamond,
   Shield,
-  Globe
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
-// NOTE: every `to` below resolves to a real route in App.tsx. Dead links that
-// pointed at unbuilt pages were removed; ones with a real equivalent were
-// repointed (e.g. /referral-dashboard -> /referrals, /dashboard/account-settings
-// -> /dashboard/account, packages -> /packages, campaign studio -> /create-campaign).
+// Every `to` resolves to a real route in App.tsx.
 const navigationGroups = [
   {
-    label: "Command Center",
-    items: [
-      { label: "Overview", to: "/dashboard", icon: LayoutDashboard, end: true },
-    ]
+    label: "Overview",
+    items: [{ label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, end: true }],
   },
   {
-    label: "Portfolio & Earnings",
+    label: "Earnings",
     items: [
-      { label: "Digital Wallet", to: "/wallet", icon: Wallet, badge: "Premium" },
-      { label: "Investment Packages", to: "/packages", icon: Package },
-      { label: "Auto Payouts", to: "/dashboard/payouts", icon: DollarSign, badge: "Pro" },
-    ]
+      { label: "Wallet", to: "/wallet", icon: Wallet },
+      { label: "Packages", to: "/packages", icon: Package },
+      { label: "Auto Payouts", to: "/dashboard/payouts", icon: DollarSign },
+    ],
   },
   {
-    label: "Activities & Opportunities",
+    label: "Activities",
     items: [
-      { label: "Task Portfolio", to: "/tasks", icon: Target },
+      { label: "Tasks", to: "/tasks", icon: Target },
       { label: "Activity History", to: "/dashboard/task-history", icon: BarChart3 },
-    ]
+    ],
   },
   {
-    label: "Campaign Management",
+    label: "Campaigns",
     items: [
-      { label: "Campaign Studio", to: "/create-campaign", icon: Megaphone, badge: "Elite" },
-      { label: "Campaign Hub", to: "/campaigns", icon: Target },
-      { label: "Performance Analytics", to: "/dashboard/campaign-analytics", icon: BarChart3, badge: "New" },
-    ]
+      { label: "Create Campaign", to: "/create-campaign", icon: Megaphone },
+      { label: "Campaign Board", to: "/campaigns", icon: Target },
+      { label: "Analytics", to: "/dashboard/campaign-analytics", icon: BarChart3 },
+    ],
   },
   {
-    label: "Network & Community",
+    label: "Network",
     items: [
-      { label: "Team Management", to: "/dashboard/team", icon: Users },
-      { label: "Referral System", to: "/referrals", icon: UserPlus },
-      { label: "Volume Tracker", to: "/dashboard/balanced-volume", icon: Calculator, badge: "Commission" },
-    ]
+      { label: "Team", to: "/dashboard/team", icon: Users },
+      { label: "Referrals", to: "/referrals", icon: UserPlus },
+      { label: "Volume", to: "/dashboard/balanced-volume", icon: Calculator },
+    ],
   },
   {
-    label: "Rankings & Recognition",
+    label: "Rankings",
     items: [
-      { label: "Global Leaderboard", to: "/leaderboard", icon: Trophy },
-      { label: "Rank Progression", to: "/dashboard/rank-progress", icon: Crown, badge: "Elite" },
-      { label: "Royalty Center", to: "/dashboard/royalty", icon: Zap, badge: "Exclusive" },
-      { label: "Leadership Portal", to: "/dashboard/leadership", icon: Star, badge: "VIP" },
-    ]
+      { label: "Leaderboard", to: "/leaderboard", icon: Trophy },
+      { label: "Rank Progress", to: "/dashboard/rank-progress", icon: Crown },
+      { label: "Royalty", to: "/dashboard/royalty", icon: Zap },
+      { label: "Leadership", to: "/dashboard/leadership", icon: Star },
+    ],
   },
   {
-    label: "Settings & Security",
+    label: "Account",
     items: [
-      { label: "Profile Management", to: "/dashboard/profile", icon: Settings },
-      { label: "Account Security", to: "/dashboard/account", icon: Shield },
-    ]
-  }
+      { label: "Profile", to: "/dashboard/profile", icon: Settings },
+      { label: "Security", to: "/dashboard/account", icon: Shield },
+    ],
+  },
 ];
 
 export default function RefinedDashboardSidebar() {
@@ -111,88 +92,45 @@ export default function RefinedDashboardSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
 
-  const isActiveRoute = (path: string, end?: boolean) => {
-    if (end) {
-      return location.pathname === path;
-    }
-    return location.pathname.startsWith(path);
-  };
+  const isActive = (path: string, end?: boolean) =>
+    end ? location.pathname === path : location.pathname.startsWith(path);
 
   return (
-    <Sidebar className={`${collapsed ? "w-20" : "w-80"} bg-slate-900/95 backdrop-blur-2xl border-r border-white/10 shadow-2xl`} collapsible="icon">
-      <div className="flex items-center justify-center p-6 border-b border-white/10">
-        {!collapsed ? (
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="font-bold text-xl text-white">SmartClicks</h2>
-              <p className="text-xs text-slate-400 font-medium">Professional Hub</p>
-            </div>
-          </div>
-        ) : (
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-            <Sparkles className="w-6 h-6 text-white" />
-          </div>
-        )}
+    <Sidebar className={cn(collapsed ? "w-[76px]" : "w-72", "bg-slate-950 border-r border-white/10")} collapsible="icon">
+      {/* Brand */}
+      <div className="flex items-center gap-3 h-16 px-5 border-b border-white/10">
+        <div className="h-9 w-9 shrink-0 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
+          <Sparkles className="h-5 w-5 text-white" />
+        </div>
+        {!collapsed && <span className="text-lg font-bold tracking-tight text-white">SmartClicks</span>}
       </div>
 
-      <SidebarContent className="px-4 py-6 bg-slate-900/60 backdrop-blur-lg overflow-y-auto">
+      <SidebarContent className="px-3 py-4 overflow-y-auto">
         {navigationGroups.map((group) => (
-          <SidebarGroup key={group.label} className="mb-8">
+          <SidebarGroup key={group.label} className="mb-4">
             {!collapsed && (
-              <SidebarGroupLabel className="text-xs font-bold text-slate-500 px-4 py-3 uppercase tracking-wider mb-3">
+              <SidebarGroupLabel className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                 {group.label}
               </SidebarGroupLabel>
             )}
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-2">
-                {group.items.map(({ label, to, icon: Icon, end, badge }) => {
-                  const isActive = isActiveRoute(to, end);
-                  
+              <SidebarMenu className="space-y-0.5">
+                {group.items.map(({ label, to, icon: Icon, end }) => {
+                  const active = isActive(to, end);
                   return (
                     <SidebarMenuItem key={label}>
                       <SidebarMenuButton asChild>
                         <NavLink
                           to={to}
                           end={!!end}
-                          className={() =>
-                            cn(
-                              "flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group relative text-sm font-semibold",
-                              "hover:bg-white/10 hover:shadow-lg",
-                              isActive
-                                ? "bg-gradient-to-r from-purple-600/30 to-blue-600/30 text-white font-bold shadow-lg shadow-purple-500/20 border border-purple-500/30 backdrop-blur-sm"
-                                : "text-slate-400 hover:text-white"
-                            )
-                          }
-                        >
-                          <div className={cn(
-                            "p-2 rounded-xl transition-all duration-300",
-                            isActive 
-                              ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50" 
-                              : "bg-white/10 text-slate-400 group-hover:bg-white/20 group-hover:text-white"
-                          )}>
-                            <Icon className="w-5 h-5" />
-                          </div>
-                          {!collapsed && (
-                            <>
-                              <span className="flex-1 text-left truncate">{label}</span>
-                              {badge && (
-                                <Badge variant="secondary" className={cn(
-                                  "text-xs font-bold px-3 py-1 border",
-                                  isActive 
-                                    ? "bg-purple-500/20 text-purple-300 border-purple-400/30" 
-                                    : "bg-white/10 text-slate-400 border-white/20"
-                                )}>
-                                  {badge}
-                                </Badge>
-                              )}
-                              {isActive && (
-                                <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full shadow-lg shadow-purple-400/50 animate-pulse" />
-                              )}
-                            </>
+                          title={label}
+                          className={cn(
+                            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                            active ? "bg-violet-600/15 text-white" : "text-slate-400 hover:bg-white/5 hover:text-white"
                           )}
+                        >
+                          <Icon className={cn("h-5 w-5 shrink-0", active && "text-violet-400")} />
+                          {!collapsed && <span className="truncate">{label}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
