@@ -66,7 +66,7 @@ const ModernDashboard: React.FC = () => {
   const actions = [
     { label: "Do tasks", icon: Target, to: "/tasks", tint: "from-sky-500 to-blue-600" },
     { label: "Campaigns", icon: Megaphone, to: "/campaigns", tint: "from-violet-500 to-purple-600" },
-    { label: "Refer & earn", icon: UserPlus, to: "/referrals", tint: "from-emerald-500 to-green-600" },
+    { label: "Refer & earn", icon: UserPlus, to: "/dashboard/team", tint: "from-emerald-500 to-green-600" },
     { label: "Wallet", icon: Wallet, to: "/wallet", tint: "from-amber-500 to-orange-600" },
   ];
 

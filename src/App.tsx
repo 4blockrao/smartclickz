@@ -26,7 +26,6 @@ const DashboardTaskHistory = lazy(() => import('@/pages/DashboardTaskHistory'));
 const DashboardTeam = lazy(() => import('@/pages/DashboardTeam'));
 const Task2Earn = lazy(() => import('@/pages/Task2Earn'));
 const Packages = lazy(() => import('@/pages/Packages'));
-const ReferralDashboard = lazy(() => import('@/pages/ReferralDashboard'));
 const Wallet = lazy(() => import('@/pages/Wallet'));
 const SocialConnect = lazy(() => import('@/pages/SocialConnect'));
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'));
@@ -123,7 +122,6 @@ function App() {
                       {/* Earn / portal */}
                       <Route path="tasks" element={<Task2Earn />} />
                       <Route path="packages" element={<Packages />} />
-                      <Route path="referrals" element={<ReferralDashboard />} />
                       <Route path="wallet" element={<Wallet />} />
                       <Route path="social-connect" element={<SocialConnect />} />
                       <Route path="leaderboard" element={<Leaderboard />} />
