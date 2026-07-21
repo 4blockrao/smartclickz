@@ -64,7 +64,7 @@ const navigationGroups = [
   {
     label: "Network",
     items: [
-      { label: "Team & Referrals", to: "/dashboard/team", icon: Users },
+      { label: "Team & Referrals", to: "/referrals", icon: Users },
       { label: "Volume", to: "/dashboard/balanced-volume", icon: Calculator },
     ],
   },

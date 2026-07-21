@@ -23,7 +23,7 @@ const DashboardSecurity = lazy(() => import('@/pages/DashboardSecurity'));
 const DashboardAccountSettings = lazy(() => import('@/pages/DashboardAccountSettings'));
 const DashboardPasswordChange = lazy(() => import('@/pages/DashboardPasswordChange'));
 const DashboardTaskHistory = lazy(() => import('@/pages/DashboardTaskHistory'));
-const DashboardTeam = lazy(() => import('@/pages/DashboardTeam'));
+const ReferralDashboard = lazy(() => import('@/pages/ReferralDashboard'));
 const Task2Earn = lazy(() => import('@/pages/Task2Earn'));
 const Packages = lazy(() => import('@/pages/Packages'));
 const Wallet = lazy(() => import('@/pages/Wallet'));
@@ -110,7 +110,7 @@ function App() {
                       <Route path="dashboard/account" element={<DashboardAccountSettings />} />
                       <Route path="dashboard/password" element={<DashboardPasswordChange />} />
                       <Route path="dashboard/task-history" element={<DashboardTaskHistory />} />
-                      <Route path="dashboard/team" element={<DashboardTeam />} />
+                      <Route path="referrals" element={<ReferralDashboard />} />
                       <Route path="dashboard/rank-progress" element={<DashboardRankProgress />} />
                       <Route path="dashboard/royalty" element={<DashboardRoyalty />} />
                       <Route path="dashboard/balanced-volume" element={<DashboardBalancedVolume />} />
