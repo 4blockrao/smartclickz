@@ -62,7 +62,6 @@ const DashboardRoyalty = lazy(() => import('@/components/dashboard/DashboardRoya
 const DashboardBalancedVolume = lazy(() => import('@/components/dashboard/DashboardBalancedVolume'));
 const DashboardCampaignAnalytics = lazy(() => import('@/components/dashboard/DashboardCampaignAnalytics'));
 const DashboardLeadership = lazy(() => import('@/components/dashboard/DashboardLeadership'));
-const DashboardPayouts = lazy(() => import('@/components/dashboard/DashboardPayouts'));
 
 import './App.css';
 
@@ -116,7 +115,6 @@ function App() {
                       <Route path="dashboard/balanced-volume" element={<DashboardBalancedVolume />} />
                       <Route path="dashboard/campaign-analytics" element={<DashboardCampaignAnalytics />} />
                       <Route path="dashboard/leadership" element={<DashboardLeadership />} />
-                      <Route path="dashboard/payouts" element={<DashboardPayouts />} />
                       <Route path="dashboard/withdrawal" element={<DashboardWithdrawal />} />
 
                       {/* Earn / portal */}

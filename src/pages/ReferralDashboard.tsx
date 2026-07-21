@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useReferrals } from '@/hooks/useReferrals';
+import DashboardPayouts from '@/components/dashboard/DashboardPayouts';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -191,25 +192,7 @@ const ReferralDashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="earnings" className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <DollarSign className="w-6 h-6 text-green-400" />
-                  Earnings History & Projections
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <TrendingUp className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    Detailed Earnings Analytics
-                  </h3>
-                  <p className="text-slate-300">
-                    Advanced earnings tracking and projections coming soon
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <DashboardPayouts />
           </TabsContent>
         </Tabs>
       </div>

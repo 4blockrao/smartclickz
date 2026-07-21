@@ -43,7 +43,6 @@ const navigationGroups = [
     items: [
       { label: "Wallet", to: "/wallet", icon: Wallet },
       { label: "Packages", to: "/packages", icon: Package },
-      { label: "Auto Payouts", to: "/dashboard/payouts", icon: DollarSign },
     ],
   },
   {
