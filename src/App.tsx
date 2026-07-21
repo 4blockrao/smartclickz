@@ -42,6 +42,7 @@ const AdminTeams = lazy(() => import('@/pages/AdminTeams'));
 const AdminWithdrawals = lazy(() => import('@/pages/AdminWithdrawals'));
 const AdminCampaigns = lazy(() => import('@/pages/AdminCampaigns'));
 const AdminProUpgrades = lazy(() => import('@/pages/AdminProUpgrades'));
+const AdminSubscriptions = lazy(() => import('@/pages/AdminSubscriptions'));
 const AdminClients = lazy(() => import('@/pages/AdminClients'));
 const ManageRoles = lazy(() => import('@/pages/ManageRoles'));
 const DashboardWithdrawal = lazy(() => import('@/pages/DashboardWithdrawal'));
@@ -49,6 +50,7 @@ const ClientDashboard = lazy(() => import('@/pages/ClientDashboard'));
 const CreateCampaign = lazy(() => import('@/pages/CreateCampaign'));
 const CampaignBoard = lazy(() => import('@/pages/CampaignBoard'));
 const CampaignDetailNew = lazy(() => import('@/pages/CampaignDetailNew'));
+const CompensationPlan = lazy(() => import('@/pages/CompensationPlan'));
 const About = lazy(() => import('@/pages/About'));
 const Help = lazy(() => import('@/pages/Help'));
 const Contact = lazy(() => import('@/pages/Contact'));
@@ -123,6 +125,7 @@ function App() {
                       <Route path="wallet" element={<Wallet />} />
                       <Route path="social-connect" element={<SocialConnect />} />
                       <Route path="leaderboard" element={<Leaderboard />} />
+                      <Route path="plan" element={<CompensationPlan />} />
 
                       {/* Advertiser */}
                       <Route path="client" element={<ClientDashboard />} />
@@ -146,6 +149,7 @@ function App() {
                         <Route path="admin/withdrawals" element={<AdminWithdrawals />} />
                         <Route path="admin/campaigns" element={<AdminCampaigns />} />
                         <Route path="admin/pro-upgrades" element={<AdminProUpgrades />} />
+                        <Route path="admin/subscriptions" element={<AdminSubscriptions />} />
                         <Route path="admin/clients" element={<AdminClients />} />
                         <Route path="admin/roles" element={<ManageRoles />} />
                       </Route>
@@ -153,6 +157,7 @@ function App() {
 
                     {/* ===== Public (marketing shell) ===== */}
                     <Route path="/" element={<Layout><Index /></Layout>} />
+                    <Route path="compensation" element={<Layout><CompensationPlan /></Layout>} />
                     <Route path="about" element={<Layout><About /></Layout>} />
                     <Route path="help" element={<Layout><Help /></Layout>} />
                     <Route path="contact" element={<Layout><Contact /></Layout>} />

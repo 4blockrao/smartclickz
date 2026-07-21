@@ -10,6 +10,7 @@ const sections = [
   { path: "/admin/tasks", label: "Tasks" },
   { path: "/admin/withdrawals", label: "Withdrawals" },
   { path: "/admin/pro-upgrades", label: "Pro Upgrades" },
+  { path: "/admin/subscriptions", label: "Subscriptions & Comp Plan" },
   { path: "/admin/referrals", label: "User Referrals" },
   { path: "/admin/teams", label: "Teams/Downlines" },
   { path: "/admin/users", label: "Users" },

@@ -64,6 +64,7 @@ const navigationGroups = [
     label: "Network",
     items: [
       { label: "Team & Referrals", to: "/referrals", icon: Users },
+      { label: "Compensation Plan", to: "/plan", icon: Award },
       { label: "Volume", to: "/dashboard/balanced-volume", icon: Calculator },
     ],
   },
