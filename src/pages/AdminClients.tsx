@@ -35,9 +35,9 @@ export default function AdminClients() {
 
   const credit = useMutation({
     mutationFn: async ({ clientId, amount }: { clientId: string; amount: number }) => {
-      const { error } = await supabase.rpc("credit_client_wallet" as any, {
+      const { error } = await supabase.rpc("grant_credits" as any, {
         _client_id: clientId,
-        _amount: amount,
+        _credits: amount,
       });
       if (error) throw error;
     },
@@ -105,7 +105,7 @@ export default function AdminClients() {
                       <Input
                         type="number"
                         min="1"
-                        placeholder="Amount"
+                        placeholder="Credits ($1=1000)"
                         value={amounts[c.id] || ""}
                         onChange={(e) => setAmounts((a) => ({ ...a, [c.id]: e.target.value }))}
                         className="w-32"

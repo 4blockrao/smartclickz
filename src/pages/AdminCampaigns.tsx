@@ -125,42 +125,13 @@ const AdminCampaigns: React.FC = () => {
 
   const approveTaskMutation = useMutation({
     mutationFn: async ({ taskId, adminNote }: { taskId: string; adminNote?: string }) => {
-      // Who to pay and how much (reward_amount = base points for this activity)
-      const { data: task, error: fetchError } = await supabase
-        .from('campaign_tasks')
-        .select('user_id, reward_amount, campaign_id')
-        .eq('id', taskId)
-        .single();
-      if (fetchError) throw fetchError;
-
-      const { error } = await supabase
-        .from('campaign_tasks')
-        .update({
-          status: 'approved',
-          approved_at: new Date().toISOString(),
-          admin_note: adminNote
-        })
-        .eq('id', taskId);
+      // Pay the user the fixed reward + advance campaign spend (credits were
+      // reserved upfront at creation, so this does not re-debit the advertiser).
+      const { error } = await supabase.rpc('approve_campaign_action' as any, {
+        _task_id: taskId,
+        _admin_note: adminNote || null,
+      });
       if (error) throw error;
-
-      // Credit the user through the tier-aware, idempotent award function.
-      if (task?.user_id) {
-        await supabase.rpc('award_activity_points' as any, {
-          _user_id: task.user_id,
-          _base_points: Math.round(Number(task.reward_amount) || 0),
-          _event_code: `campaign_task:${taskId}`,
-          _note: 'Campaign activity approved',
-          _event_metadata: { campaign_task_id: taskId },
-        });
-      }
-
-      // Advance the campaign's progress (completed_tasks + spent_budget).
-      if (task?.campaign_id) {
-        await supabase.rpc('increment_campaign_progress' as any, {
-          _campaign_id: task.campaign_id,
-          _reward: Number(task.reward_amount) || 0,
-        });
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-campaign-tasks'] });

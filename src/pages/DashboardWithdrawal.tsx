@@ -33,8 +33,8 @@ export default function DashboardWithdrawal() {
   const [withdrawalDetails, setWithdrawalDetails] = useState("");
 
   // Minimum withdrawal amounts and conversion rates
-  const MIN_WITHDRAWAL = 1000; // points
-  const POINTS_TO_USD_RATE = 0.01; // 1 point = $0.01
+  const MIN_WITHDRAWAL = 1000; // credits
+  const POINTS_TO_USD_RATE = 0.001; // 1000 credits = $1
   const withdrawalAmountUSD = parseFloat(withdrawalAmount) * POINTS_TO_USD_RATE;
 
   const createWithdrawalMutation = useMutation({
@@ -236,7 +236,7 @@ export default function DashboardWithdrawal() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-300">Conversion Rate</span>
-                    <span className="text-white">1 point = $0.01</span>
+                    <span className="text-white">1000 credits = $1</span>
                   </div>
                 </div>
               </CardContent>

@@ -93,15 +93,15 @@ const ClientDashboard: React.FC = () => {
       bg: "bg-blue-50"
     },
     {
-      title: "Total Spent",
-      value: `$${clientData?.total_spent || 0}`,
+      title: "Credits Spent",
+      value: (Number(clientData?.total_spent) || 0).toLocaleString(),
       icon: DollarSign,
       color: "text-green-600",
       bg: "bg-green-50"
     },
     {
-      title: "Wallet Balance",
-      value: `$${clientData?.wallet_balance || 0}`,
+      title: "Credit Balance",
+      value: (Number(clientData?.wallet_balance) || 0).toLocaleString(),
       icon: TrendingUp,
       color: "text-purple-600",
       bg: "bg-purple-50"
@@ -350,14 +350,14 @@ const ClientDashboard: React.FC = () => {
                   <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                     <div>
                       <h3 className="font-semibold">Current Balance</h3>
-                      <p className="text-2xl font-bold text-primary">${clientData?.wallet_balance || 0}</p>
+                      <p className="text-2xl font-bold text-primary">{(Number(clientData?.wallet_balance) || 0).toLocaleString()} credits</p>
                     </div>
                     <Button
                       onClick={() =>
-                        toast.info("Online checkout is coming soon. Contact support to top up your wallet in the meantime.")
+                        toast.info("Buy credits — $1 = 1000 credits. Online checkout is coming soon; contact support to top up meanwhile.")
                       }
                     >
-                      Add Funds
+                      Buy Credits
                     </Button>
                   </div>
                   
@@ -373,8 +373,8 @@ const ClientDashboard: React.FC = () => {
                         <span className="ml-2">{clientData?.business_email}</span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Total Spent:</span>
-                        <span className="ml-2">${clientData?.total_spent}</span>
+                        <span className="text-muted-foreground">Credits Spent:</span>
+                        <span className="ml-2">{(Number(clientData?.total_spent) || 0).toLocaleString()}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Status:</span>
