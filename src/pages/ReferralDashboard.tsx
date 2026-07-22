@@ -26,7 +26,7 @@ const ReferralDashboard: React.FC = () => {
         supabase.from("profiles").select("account_tier, referral_user_id, team_level1, team_level2, team_level3").eq("user_id", user!.id).maybeSingle(),
         supabase.from("user_referrals").select("id", { count: "exact", head: true }).eq("referrer_id", user!.id),
         supabase.from("binary_nodes").select("left_carry, right_carry, matched_volume_total").eq("user_id", user!.id).maybeSingle(),
-        supabase.from("points_ledger").select("amount, type, created_at").eq("user_id", user!.id).in("type", ["commission", "matching_bonus", "royalty"]),
+        supabase.from("ledger_entries").select("amount, category, created_at").eq("account_type", "user").eq("account_id", user!.id).in("category", ["commission", "matching_bonus", "royalty"]),
         supabase.from("comp_cap_cycles").select("*").eq("user_id", user!.id).eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("membership_tiers").select("*").eq("is_paid", true).order("sort_order"),
       ]);

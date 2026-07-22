@@ -39,7 +39,7 @@ export default function DashboardPayouts() {
         supabase.from("comp_cap_cycles").select("*").eq("user_id", user!.id)
           .eq("status", "active").order("started_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("binary_nodes").select("left_carry,right_carry,matched_volume_total,left_id,right_id").eq("user_id", user!.id).maybeSingle(),
-        supabase.from("points_ledger").select("amount,type,note,created_at").eq("user_id", user!.id)
+        supabase.from("ledger_entries").select("amount,category,note,created_at").eq("account_type", "user").eq("account_id", user!.id)
           .order("created_at", { ascending: false }).limit(200),
         supabase.from("profiles").select("account_tier").eq("user_id", user!.id).maybeSingle(),
       ]);
@@ -114,7 +114,7 @@ export default function DashboardPayouts() {
   const estCommission = pendingMatch * 0.1 * 1000; // USD -> credits
 
   const sums = ledger.reduce((acc: Record<string, number>, e: any) => {
-    if (Number(e.amount) > 0) acc[e.type] = (acc[e.type] || 0) + Number(e.amount);
+    if (Number(e.amount) > 0) acc[e.category] = (acc[e.category] || 0) + Number(e.amount);
     return acc;
   }, {});
 
@@ -260,7 +260,7 @@ export default function DashboardPayouts() {
           ) : (
             <div className="space-y-2">
               {ledger.slice(0, 40).map((e: any, i: number) => {
-                const meta = TYPE_META[e.type] || { label: e.type, icon: Gift, tint: "text-slate-400" };
+                const meta = TYPE_META[e.category] || { label: e.category, icon: Gift, tint: "text-slate-400" };
                 const Icon = meta.icon;
                 const positive = Number(e.amount) > 0;
                 return (

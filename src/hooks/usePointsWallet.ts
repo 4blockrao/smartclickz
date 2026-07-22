@@ -1,59 +1,66 @@
-
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 
-// Get the row type for points_ledger from the Database type
-type PointsLedgerEntry = Database["public"]["Tables"]["points_ledger"]["Row"];
+export interface LedgerRow {
+  id: number;
+  amount: number;        // signed: +credit / -debit
+  category: string;
+  balance_after: number;
+  note: string | null;
+  created_at: string;
+}
 
+/**
+ * Wallet state backed by the unified ledger.
+ * - pointsBalance comes from the authoritative cached balance (profiles.points),
+ *   which post_ledger keeps in sync with the ledger.
+ * - ledger is the member's own ledger_entries (signed amounts).
+ */
 export function usePointsWallet(userId: string | undefined) {
   const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["points-ledger", userId],
-    queryFn: async () => {
-      if (!userId) return [];
-      const { data, error } = await supabase
-        .from("points_ledger")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data as PointsLedgerEntry[]) ?? [];
-    },
+    queryKey: ["wallet", userId],
     enabled: !!userId,
+    queryFn: async () => {
+      const [profRes, ledgerRes] = await Promise.all([
+        supabase.from("profiles").select("points").eq("user_id", userId).maybeSingle(),
+        supabase
+          .from("ledger_entries")
+          .select("id, amount, category, balance_after, note, created_at")
+          .eq("account_type", "user")
+          .eq("account_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(300),
+      ]);
+      return {
+        balance: Number(profRes.data?.points || 0),
+        ledger: (ledgerRes.data as LedgerRow[]) ?? [],
+      };
+    },
   });
 
-  // Compute balance
-  const pointsBalance = data
-    ? data.reduce((sum, e) => sum + (e.type === "reward" ? e.amount : -e.amount), 0)
-    : 0;
-
-  // Add real-time updates for points_ledger
   useEffect(() => {
     if (!userId) return;
     const channel = supabase
-      .channel(`points-wallet-realtime-${userId}-${Math.random().toString(36).slice(2)}`)
+      .channel(`wallet-realtime-${userId}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes" as any,
-        {
-          event: "*", // Listen for INSERT, UPDATE, DELETE
-          schema: "public",
-          table: "points_ledger",
-          filter: `user_id=eq.${userId}`,
-        },
-        (_payload) => {
-          // Invalidate and refetch for real-time updates
-          queryClient.invalidateQueries({ queryKey: ["points-ledger", userId] });
+        { event: "*", schema: "public", table: "ledger_entries", filter: `account_id=eq.${userId}` },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["wallet", userId] });
+          queryClient.invalidateQueries({ queryKey: ["comp-earnings", userId] });
         }
       )
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [userId, queryClient]);
 
-  return { ledger: data ?? [], isLoading, error, pointsBalance };
+  return {
+    ledger: data?.ledger ?? [],
+    isLoading,
+    error,
+    pointsBalance: data?.balance ?? 0,
+  };
 }
-

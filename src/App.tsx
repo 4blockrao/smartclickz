@@ -43,6 +43,7 @@ const AdminWithdrawals = lazy(() => import('@/pages/AdminWithdrawals'));
 const AdminCampaigns = lazy(() => import('@/pages/AdminCampaigns'));
 const AdminProUpgrades = lazy(() => import('@/pages/AdminProUpgrades'));
 const AdminSubscriptions = lazy(() => import('@/pages/AdminSubscriptions'));
+const AdminLedger = lazy(() => import('@/pages/AdminLedger'));
 const AdminClients = lazy(() => import('@/pages/AdminClients'));
 const ManageRoles = lazy(() => import('@/pages/ManageRoles'));
 const DashboardWithdrawal = lazy(() => import('@/pages/DashboardWithdrawal'));
@@ -150,6 +151,7 @@ function App() {
                         <Route path="admin/campaigns" element={<AdminCampaigns />} />
                         <Route path="admin/pro-upgrades" element={<AdminProUpgrades />} />
                         <Route path="admin/subscriptions" element={<AdminSubscriptions />} />
+                        <Route path="admin/ledger" element={<AdminLedger />} />
                         <Route path="admin/clients" element={<AdminClients />} />
                         <Route path="admin/roles" element={<ManageRoles />} />
                       </Route>

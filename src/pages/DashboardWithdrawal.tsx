@@ -40,40 +40,31 @@ export default function DashboardWithdrawal() {
   const createWithdrawalMutation = useMutation({
     mutationFn: async (data: { points: number; method: string; details: string }) => {
       if (!user) throw new Error("User not authenticated");
-      
-      const { error } = await supabase
-        .from("withdrawal_requests")
-        .insert([
-          {
-            user_id: user.id,
-            requested_points: data.points,
-            status: "pending"
-          }
-        ]);
 
-      if (error) throw error;
-
-      // Update user profile with withdrawal method and details
+      // Save payout method/details so the admin knows where to pay.
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
           withdrawal_method: data.method,
-          withdrawal_details: { method: data.method, details: data.details }
+          withdrawal_details: { method: data.method, details: data.details },
         })
         .eq("user_id", user.id);
-
       if (profileError) throw profileError;
+
+      // Create the request AND hold the funds in the ledger (single source of truth).
+      const { error } = await supabase.rpc("request_withdrawal", { _credits: data.points });
+      if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Withdrawal request submitted successfully!");
+      toast.success("Withdrawal request submitted — funds are on hold pending review.");
       setWithdrawalAmount("");
       setWithdrawalMethod("");
       setWithdrawalDetails("");
       queryClient.invalidateQueries({ queryKey: ["withdrawal-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["wallet", user?.id] });
     },
-    onError: (error) => {
-      toast.error("Failed to submit withdrawal request");
-      console.error("Withdrawal error:", error);
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to submit withdrawal request");
     },
   });
 

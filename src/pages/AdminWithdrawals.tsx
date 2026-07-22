@@ -85,60 +85,21 @@ export default function AdminWithdrawals() {
     },
   });
 
+  // Funds are held on request; approve = mark paid, reject = refund (both via ledger RPCs).
   const updateWithdrawalMutation = useMutation({
-    mutationFn: async ({ 
-      id, 
-      status, 
-      note 
-    }: { 
-      id: string; 
-      status: "approved" | "rejected"; 
-      note: string;
-    }) => {
-      const { error } = await supabase
-        .from("withdrawal_requests")
-        .update({
-          status,
-          admin_note: note,
-          reviewed_at: new Date().toISOString()
-        })
-        .eq("id", id);
-
+    mutationFn: async ({ id, status, note }: { id: string; status: "approved" | "rejected"; note: string }) => {
+      const rpc = status === "approved" ? "approve_withdrawal" : "reject_withdrawal";
+      const { error } = await supabase.rpc(rpc as any, { _id: id, _note: note || null });
       if (error) throw error;
-
-      // If approved, deduct points from user's balance
-      if (status === "approved") {
-        const request = withdrawalRequests.find(r => r.id === id);
-        if (request) {
-          const { error: pointsError } = await supabase
-            .from("points_ledger")
-            .insert([
-              {
-                user_id: request.user_id,
-                amount: request.requested_points,
-                type: "debit",
-                event_code: `withdrawal_${id}`,
-                note: `Withdrawal approved - ${request.requested_points} points`,
-                event_metadata: {
-                  withdrawal_id: id,
-                  admin_note: note
-                }
-              }
-            ]);
-
-          if (pointsError) throw pointsError;
-        }
-      }
     },
     onSuccess: (_, { status }) => {
-      toast.success(`Withdrawal ${status} successfully`);
+      toast.success(status === "approved" ? "Withdrawal marked as paid." : "Withdrawal rejected and refunded.");
       setSelectedRequest(null);
       setAdminNote("");
       queryClient.invalidateQueries({ queryKey: ["admin-withdrawal-requests"] });
     },
-    onError: (error) => {
-      toast.error("Failed to update withdrawal request");
-      console.error("Withdrawal update error:", error);
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to update withdrawal request");
     },
   });
 
@@ -172,6 +133,7 @@ export default function AdminWithdrawals() {
       case "pending":
         return "bg-yellow-500";
       case "approved":
+      case "paid":
         return "bg-green-500";
       case "rejected":
         return "bg-red-500";
@@ -224,7 +186,7 @@ export default function AdminWithdrawals() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
-              ${(totalPendingAmount * 0.01).toFixed(2)}
+              ${(totalPendingAmount / 1000).toFixed(2)}
             </div>
             <div className="text-sm text-muted-foreground">Pending USD Value</div>
           </CardContent>
@@ -252,7 +214,7 @@ export default function AdminWithdrawals() {
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
@@ -286,7 +248,7 @@ export default function AdminWithdrawals() {
                       <div className="flex items-center gap-4 text-sm">
                         <span className="flex items-center gap-1">
                           <DollarSign className="w-4 h-4" />
-                          {request.requested_points.toLocaleString()} points (${(request.requested_points * 0.01).toFixed(2)})
+                          {request.requested_points.toLocaleString()} points (${(request.requested_points / 1000).toFixed(2)})
                         </span>
                         <span>{new Date(request.created_at).toLocaleDateString()}</span>
                       </div>
@@ -323,7 +285,7 @@ export default function AdminWithdrawals() {
                                 </div>
                                 <div>
                                   <Label>USD Value</Label>
-                                  <p className="font-medium">${(selectedRequest.requested_points * 0.01).toFixed(2)}</p>
+                                  <p className="font-medium">${(selectedRequest.requested_points / 1000).toFixed(2)}</p>
                                 </div>
                                 <div>
                                   <Label>Method</Label>

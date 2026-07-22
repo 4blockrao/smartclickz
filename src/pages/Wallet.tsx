@@ -25,8 +25,15 @@ const Wallet: React.FC = () => {
   const navigate = useNavigate();
   const { ledger, pointsBalance, isLoading } = usePointsWallet(user?.id);
 
-  const totalEarned = ledger.filter((e) => e.type === "reward").reduce((s, e) => s + e.amount, 0);
-  const totalWithdrawn = ledger.filter((e) => e.type !== "reward").reduce((s, e) => s + e.amount, 0);
+  const CATEGORY_LABEL: Record<string, string> = {
+    task_reward: "Task reward", commission: "Binary match", matching_bonus: "Matching bonus",
+    royalty: "Royalty", reward: "Reward", withdrawal: "Withdrawal", refund: "Refund",
+    adjustment: "Adjustment", opening_balance: "Opening balance",
+  };
+  const label = (c: string) => CATEGORY_LABEL[c] || c;
+
+  const totalEarned = ledger.filter((e) => e.amount > 0 && e.category !== "opening_balance").reduce((s, e) => s + e.amount, 0);
+  const totalWithdrawn = ledger.filter((e) => e.category === "withdrawal").reduce((s, e) => s + Math.abs(e.amount), 0);
 
   if (isLoading) {
     return (
@@ -100,18 +107,18 @@ const Wallet: React.FC = () => {
                       {ledger.slice(0, 6).map((entry) => (
                         <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${entry.type === "reward" ? "bg-green-500" : "bg-red-500"}`}>
-                              {entry.type === "reward" ? <Award className="w-5 h-5 text-white" /> : <Target className="w-5 h-5 text-white" />}
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${entry.amount >= 0 ? "bg-green-500" : "bg-red-500"}`}>
+                              {entry.amount >= 0 ? <Award className="w-5 h-5 text-white" /> : <Target className="w-5 h-5 text-white" />}
                             </div>
                             <div>
-                              <div className="text-white font-medium">{entry.note || entry.event_code}</div>
+                              <div className="text-white font-medium">{entry.note || label(entry.category)}</div>
                               <div className="text-slate-400 text-sm">
                                 {entry.created_at ? new Date(entry.created_at).toLocaleDateString() : "—"}
                               </div>
                             </div>
                           </div>
-                          <div className={`font-bold ${entry.type === "reward" ? "text-green-400" : "text-red-400"}`}>
-                            {entry.type === "reward" ? "+" : "-"}{entry.amount}
+                          <div className={`font-bold ${entry.amount >= 0 ? "text-green-400" : "text-red-400"}`}>
+                            {entry.amount >= 0 ? "+" : "-"}{Math.abs(entry.amount).toLocaleString()}
                           </div>
                         </div>
                       ))}
@@ -138,19 +145,21 @@ const Wallet: React.FC = () => {
                       {ledger.map((entry, index) => (
                         <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
                           <div className="flex items-center gap-3">
-                            <div className="text-slate-400 text-sm font-mono">#{String(index + 1).padStart(4, "0")}</div>
+                            <div className="text-slate-400 text-sm font-mono">#{String(ledger.length - index).padStart(4, "0")}</div>
                             <div>
-                              <div className="text-white font-medium">{entry.note || entry.event_code}</div>
+                              <div className="text-white font-medium">{entry.note || label(entry.category)}</div>
                               <div className="text-slate-400 text-sm flex items-center gap-2">
                                 <Calendar className="w-3 h-3" />
                                 {entry.created_at ? new Date(entry.created_at).toLocaleDateString() : "—"}
-                                <Badge variant="outline" className="text-xs">{entry.type}</Badge>
+                                <Badge variant="outline" className="text-xs">{label(entry.category)}</Badge>
                               </div>
                             </div>
                           </div>
-                          <div className={`font-bold text-right ${entry.type === "reward" ? "text-green-400" : "text-red-400"}`}>
-                            {entry.type === "reward" ? "+" : "-"}{entry.amount}
-                            <div className="text-slate-400 text-xs">points</div>
+                          <div className="text-right">
+                            <div className={`font-bold ${entry.amount >= 0 ? "text-green-400" : "text-red-400"}`}>
+                              {entry.amount >= 0 ? "+" : "-"}{Math.abs(entry.amount).toLocaleString()}
+                            </div>
+                            <div className="text-slate-400 text-xs">bal {Number(entry.balance_after).toLocaleString()}</div>
                           </div>
                         </div>
                       ))}

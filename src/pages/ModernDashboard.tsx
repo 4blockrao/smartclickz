@@ -34,7 +34,7 @@ const ModernDashboard: React.FC = () => {
         supabase.from("profiles").select("*").eq("user_id", user!.id).maybeSingle(),
         supabase.from("user_stats").select("*").eq("user_id", user!.id).maybeSingle(),
         supabase.from("tasks").select("id,title,payout_points,type").eq("is_active", true).order("created_at", { ascending: false }).limit(4),
-        supabase.from("points_ledger").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }).limit(6),
+        supabase.from("ledger_entries").select("id,amount,category,note,created_at").eq("account_type", "user").eq("account_id", user!.id).order("created_at", { ascending: false }).limit(6),
       ]);
       return {
         profile: profileRes.data,
@@ -177,18 +177,18 @@ const ModernDashboard: React.FC = () => {
           ) : (
             <div className="space-y-2">
               {data?.recent.map((e: any) => {
-                const positive = e.type === "reward";
+                const positive = Number(e.amount) >= 0;
                 return (
                   <div key={e.id} className="flex items-center gap-3 rounded-2xl bg-white/[0.03] p-3 min-h-[56px]">
                     <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${positive ? "bg-emerald-400/10 text-emerald-400" : "bg-rose-400/10 text-rose-400"}`}>
                       {positive ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-medium text-white truncate">{e.note || e.event_code}</div>
+                      <div className="text-sm font-medium text-white truncate capitalize">{e.note || (e.category || "").replace(/_/g, " ")}</div>
                       <div className="text-xs text-slate-500">{e.created_at ? new Date(e.created_at).toLocaleDateString() : "—"}</div>
                     </div>
                     <span className={`text-sm font-semibold shrink-0 ${positive ? "text-emerald-400" : "text-rose-400"}`}>
-                      {positive ? "+" : "-"}{e.amount}
+                      {positive ? "+" : "-"}{Math.abs(Number(e.amount)).toLocaleString()}
                     </span>
                   </div>
                 );

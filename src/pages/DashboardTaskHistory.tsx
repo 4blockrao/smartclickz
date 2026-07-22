@@ -59,12 +59,13 @@ export default function DashboardTaskHistory() {
       if (!user) return [];
       
       const { data, error } = await supabase
-        .from("points_ledger")
-        .select("*")
-        .eq("user_id", user.id)
-        .like("event_code", "task_%")
+        .from("ledger_entries")
+        .select("amount,category,created_at")
+        .eq("account_type", "user")
+        .eq("account_id", user.id)
+        .eq("category", "task_reward")
         .order("created_at", { ascending: false });
-      
+
       if (error) throw error;
       return data || [];
     },
