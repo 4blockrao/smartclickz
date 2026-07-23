@@ -63,7 +63,6 @@ function useProvideAuth() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
         
         if (!mounted) return;
 
@@ -94,13 +93,11 @@ function useProvideAuth() {
 
         // Handle specific auth events
         if (event === 'SIGNED_IN') {
-          console.log('User signed in successfully');
           toast({
             title: "Welcome back!",
             description: "You've been signed in successfully.",
           });
         } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out');
           setUserProfile(null);
         }
       }

@@ -18,20 +18,17 @@ const Index = lazy(() => import('@/pages/Index'));
 const Auth = lazy(() => import('@/pages/Auth'));
 const ModernDashboard = lazy(() => import('@/pages/ModernDashboard'));
 const DashboardProfile = lazy(() => import('@/pages/DashboardProfile'));
-const DashboardSettings = lazy(() => import('@/pages/DashboardSettings'));
 const DashboardSecurity = lazy(() => import('@/pages/DashboardSecurity'));
 const DashboardAccountSettings = lazy(() => import('@/pages/DashboardAccountSettings'));
 const DashboardPasswordChange = lazy(() => import('@/pages/DashboardPasswordChange'));
-const DashboardTaskHistory = lazy(() => import('@/pages/DashboardTaskHistory'));
 const ReferralDashboard = lazy(() => import('@/pages/ReferralDashboard'));
 const Task2Earn = lazy(() => import('@/pages/Task2Earn'));
 const Packages = lazy(() => import('@/pages/Packages'));
 const Wallet = lazy(() => import('@/pages/Wallet'));
 const SocialConnect = lazy(() => import('@/pages/SocialConnect'));
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'));
-const AdminPanel = lazy(() => import('@/pages/AdminPanel'));
 const AdminDashboard = lazy(() => import('@/pages/AdminDashboard'));
-const AdminHome = lazy(() => import('@/pages/AdminHome'));
+const AdminHome = lazy(() => import('@/pages/admin/AdminHome'));
 const AdminUsers = lazy(() => import('@/pages/AdminUsers'));
 const AdminActivityLog = lazy(() => import('@/pages/AdminActivityLog'));
 const AdminEarnings = lazy(() => import('@/pages/AdminEarnings'));
@@ -58,13 +55,6 @@ const Contact = lazy(() => import('@/pages/Contact'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
 const Terms = lazy(() => import('@/pages/Terms'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
-
-// Dashboard section views (also lazy)
-const DashboardRankProgress = lazy(() => import('@/components/dashboard/DashboardRankProgress'));
-const DashboardRoyalty = lazy(() => import('@/components/dashboard/DashboardRoyalty'));
-const DashboardBalancedVolume = lazy(() => import('@/components/dashboard/DashboardBalancedVolume'));
-const DashboardCampaignAnalytics = lazy(() => import('@/components/dashboard/DashboardCampaignAnalytics'));
-const DashboardLeadership = lazy(() => import('@/components/dashboard/DashboardLeadership'));
 
 import './App.css';
 
@@ -107,17 +97,10 @@ function App() {
                       {/* Dashboard */}
                       <Route path="dashboard" element={<ModernDashboard />} />
                       <Route path="dashboard/profile" element={<DashboardProfile />} />
-                      <Route path="dashboard/settings" element={<DashboardSettings />} />
                       <Route path="dashboard/security" element={<DashboardSecurity />} />
                       <Route path="dashboard/account" element={<DashboardAccountSettings />} />
                       <Route path="dashboard/password" element={<DashboardPasswordChange />} />
-                      <Route path="dashboard/task-history" element={<DashboardTaskHistory />} />
                       <Route path="referrals" element={<ReferralDashboard />} />
-                      <Route path="dashboard/rank-progress" element={<DashboardRankProgress />} />
-                      <Route path="dashboard/royalty" element={<DashboardRoyalty />} />
-                      <Route path="dashboard/balanced-volume" element={<DashboardBalancedVolume />} />
-                      <Route path="dashboard/campaign-analytics" element={<DashboardCampaignAnalytics />} />
-                      <Route path="dashboard/leadership" element={<DashboardLeadership />} />
                       <Route path="dashboard/withdrawal" element={<DashboardWithdrawal />} />
 
                       {/* Earn / portal */}
@@ -134,26 +117,26 @@ function App() {
                       <Route path="campaigns" element={<CampaignBoard />} />
                       <Route path="campaigns/:id" element={<CampaignDetailNew />} />
 
-                      {/* Admin (role-gated) */}
-                      <Route element={<RequireAdmin />}>
-                        <Route path="admin" element={<AdminDashboard />} />
-                        <Route path="admin/panel" element={<AdminPanel />} />
-                        <Route path="admin/dashboard" element={<AdminDashboard />} />
-                        <Route path="admin/home" element={<AdminHome />} />
-                        <Route path="admin/users" element={<AdminUsers />} />
-                        <Route path="admin/activity" element={<AdminActivityLog />} />
-                        <Route path="admin/earnings" element={<AdminEarnings />} />
-                        <Route path="admin/reports" element={<AdminReports />} />
-                        <Route path="admin/referrals" element={<AdminReferrals />} />
-                        <Route path="admin/tasks" element={<AdminTasks />} />
-                        <Route path="admin/teams" element={<AdminTeams />} />
-                        <Route path="admin/withdrawals" element={<AdminWithdrawals />} />
-                        <Route path="admin/campaigns" element={<AdminCampaigns />} />
-                        <Route path="admin/pro-upgrades" element={<AdminProUpgrades />} />
-                        <Route path="admin/subscriptions" element={<AdminSubscriptions />} />
-                        <Route path="admin/ledger" element={<AdminLedger />} />
-                        <Route path="admin/clients" element={<AdminClients />} />
-                        <Route path="admin/roles" element={<ManageRoles />} />
+                    </Route>
+
+                    {/* ===== Admin portal: its own shell (AdminSidebar), role-gated ===== */}
+                    <Route element={<RequireAdmin />}>
+                      <Route path="admin" element={<AdminDashboard />}>
+                        <Route index element={<AdminHome />} />
+                        <Route path="users" element={<AdminUsers />} />
+                        <Route path="activity" element={<AdminActivityLog />} />
+                        <Route path="earnings" element={<AdminEarnings />} />
+                        <Route path="reports" element={<AdminReports />} />
+                        <Route path="referrals" element={<AdminReferrals />} />
+                        <Route path="tasks" element={<AdminTasks />} />
+                        <Route path="teams" element={<AdminTeams />} />
+                        <Route path="withdrawals" element={<AdminWithdrawals />} />
+                        <Route path="campaigns" element={<AdminCampaigns />} />
+                        <Route path="pro-upgrades" element={<AdminProUpgrades />} />
+                        <Route path="subscriptions" element={<AdminSubscriptions />} />
+                        <Route path="ledger" element={<AdminLedger />} />
+                        <Route path="clients" element={<AdminClients />} />
+                        <Route path="roles" element={<ManageRoles />} />
                       </Route>
                     </Route>
 

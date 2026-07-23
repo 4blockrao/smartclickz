@@ -4,19 +4,14 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 const sections = [
-  { path: "/admin/dashboard", label: "Dashboard" },
   { path: "/admin/campaigns", label: "Campaigns" },
   { path: "/admin/clients", label: "Advertisers" },
   { path: "/admin/tasks", label: "Tasks" },
   { path: "/admin/withdrawals", label: "Withdrawals" },
-  { path: "/admin/pro-upgrades", label: "Pro Upgrades" },
   { path: "/admin/subscriptions", label: "Subscriptions & Comp Plan" },
   { path: "/admin/ledger", label: "Ledger" },
-  { path: "/admin/referrals", label: "User Referrals" },
-  { path: "/admin/teams", label: "Teams/Downlines" },
-  { path: "/admin/users", label: "Users" },
+  { path: "/admin/pro-upgrades", label: "Pro Upgrades" },
   { path: "/admin/roles", label: "User Roles" },
-  { path: "/admin/activity", label: "Activity Log" },
 ];
 
 export default function AdminHome() {

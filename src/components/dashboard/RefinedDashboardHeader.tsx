@@ -2,8 +2,10 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, User, Settings, Home, Diamond } from "lucide-react";
+import { LogOut, User, Settings, Home, Diamond, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePointsWallet } from "@/hooks/usePointsWallet";
 import {
@@ -25,6 +27,16 @@ export default function RefinedDashboardHeader() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { pointsBalance } = usePointsWallet(user?.id);
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user?.id,
+    staleTime: 60000,
+    queryFn: async () => {
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", user!.id);
+      return !!data?.some((r) => r.role === "admin" || r.role === "super_admin");
+    },
+  });
 
   const handleLogout = async () => {
     await logout();
@@ -59,12 +71,17 @@ export default function RefinedDashboardHeader() {
               <DropdownMenuItem onClick={() => navigate("/dashboard/profile")} className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl p-2.5 cursor-pointer">
                 <User className="w-4 h-4 mr-2" /> Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/dashboard/settings")} className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl p-2.5 cursor-pointer">
+              <DropdownMenuItem onClick={() => navigate("/dashboard/account")} className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl p-2.5 cursor-pointer">
                 <Settings className="w-4 h-4 mr-2" /> Settings
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/")} className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl p-2.5 cursor-pointer">
                 <Home className="w-4 h-4 mr-2" /> Public Site
               </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem onClick={() => navigate("/admin")} className="text-violet-300 hover:text-violet-200 hover:bg-white/10 rounded-xl p-2.5 cursor-pointer">
+                  <Shield className="w-4 h-4 mr-2" /> Admin Portal
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator className="bg-white/10 my-1" />
               <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl p-2.5 cursor-pointer">
                 <LogOut className="w-4 h-4 mr-2" /> Logout

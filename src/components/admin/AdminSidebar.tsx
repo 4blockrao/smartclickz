@@ -12,54 +12,28 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  Users,
-  Award,
-  Wallet,
-  TrendingUp,
-  Calendar,
-  Shield,
+  LayoutDashboard,
+  Megaphone,
+  Building2,
   FileText,
-  UserPlus,
-  PieChart,
-  ChevronsRight,
+  TrendingUp,
+  CreditCard,
+  BookOpen,
+  Crown,
+  Shield,
 } from "lucide-react";
 
+// Only functional admin pages are linked here.
 const navItems = [
-  {
-    to: "/admin/users",
-    label: "Users",
-    icon: Users,
-  },
-  {
-    to: "/admin/referrals",
-    label: "Referrals",
-    icon: UserPlus,
-  },
-  {
-    to: "/admin/earnings",
-    label: "Points & Earnings",
-    icon: Wallet,
-  },
-  {
-    to: "/admin/withdrawals",
-    label: "Withdrawals",
-    icon: TrendingUp,
-  },
-  {
-    to: "/admin/tasks",
-    label: "Tasks",
-    icon: FileText,
-  },
-  {
-    to: "/admin/teams",
-    label: "Teams/Downlines",
-    icon: Shield,
-  },
-  {
-    to: "/admin/reports",
-    label: "Reports",
-    icon: PieChart,
-  },
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/admin/campaigns", label: "Campaigns", icon: Megaphone },
+  { to: "/admin/clients", label: "Advertisers", icon: Building2 },
+  { to: "/admin/tasks", label: "Tasks", icon: FileText },
+  { to: "/admin/withdrawals", label: "Withdrawals", icon: TrendingUp },
+  { to: "/admin/subscriptions", label: "Subscriptions", icon: CreditCard },
+  { to: "/admin/ledger", label: "Ledger", icon: BookOpen },
+  { to: "/admin/pro-upgrades", label: "Pro Upgrades", icon: Crown },
+  { to: "/admin/roles", label: "Roles", icon: Shield },
 ];
 
 export default function AdminSidebar() {
@@ -75,6 +49,7 @@ export default function AdminSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.to}
+                      end={(item as any).end}
                       className={({ isActive }) =>
                         `flex items-center gap-2 px-3 py-2 rounded transition hover:bg-violet-100 ${
                           isActive ? "bg-violet-200 font-bold text-violet-700" : ""

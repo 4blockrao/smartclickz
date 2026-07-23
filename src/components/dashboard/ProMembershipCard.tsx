@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -67,9 +68,9 @@ export default function ProMembershipCard() {
     ? Math.min(100, Math.round((progress.earned / progress.minimum) * 100))
     : 0;
   const features: string[] = proTier?.features || [
-    "2x points on every activity",
-    "Guaranteed weekly points",
-    "Priority task matching",
+    "Higher daily task allowance",
+    "Unlock the Booster (2× task rate)",
+    "Binary commissions + matching bonus",
   ];
 
   return (
@@ -86,25 +87,28 @@ export default function ProMembershipCard() {
       <CardContent className="space-y-4">
         {isPro ? (
           <>
-            <p className="text-slate-300 text-sm">You earn 2× points on every activity.</p>
+            <p className="text-slate-300 text-sm">Your paid membership is active.</p>
             {progress && progress.minimum > 0 && (
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-slate-300">This week's minimum</span>
+                  <span className="text-slate-300">This week's target</span>
                   <span className="text-white">{progress.earned} / {progress.minimum} pts</span>
                 </div>
                 <Progress value={pct} className="h-3" />
                 <p className="text-xs text-slate-400 mt-2">
                   {progress.shortfall > 0
-                    ? `${progress.shortfall} pts to your guaranteed weekly minimum — we top up any shortfall.`
-                    : "Weekly minimum reached. 🎉"}
+                    ? `${progress.shortfall} pts to this week's activity target.`
+                    : "Weekly target reached. 🎉"}
                 </p>
               </div>
             )}
+            <Link to="/plan" className="text-sm text-violet-300 hover:text-violet-200 underline underline-offset-4">
+              View your compensation plan →
+            </Link>
           </>
         ) : (
           <>
-            <p className="text-slate-300 text-sm">Upgrade to Pro and earn more on everything you do.</p>
+            <p className="text-slate-300 text-sm">Activate a package to raise your allowance and earn commissions.</p>
             <ul className="space-y-2">
               {features.map((f) => (
                 <li key={f} className="flex items-center gap-2 text-sm text-slate-200">
@@ -112,18 +116,11 @@ export default function ProMembershipCard() {
                 </li>
               ))}
             </ul>
-            {pending ? (
-              <Badge className="bg-blue-500/20 text-blue-300">Upgrade requested — pending activation</Badge>
-            ) : (
-              <Button
-                onClick={requestUpgrade}
-                disabled={submitting}
-                className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-black font-semibold"
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                {submitting ? "Requesting…" : `Go Pro${proTier?.monthly_price ? ` — $${proTier.monthly_price}/mo` : ""}`}
+            <Link to="/packages">
+              <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold">
+                <Zap className="w-4 h-4 mr-2" /> View membership plans
               </Button>
-            )}
+            </Link>
           </>
         )}
       </CardContent>

@@ -36,27 +36,27 @@ const Index = () => {
   };
 
   const stats = [
-    { 
-      label: "Active Users", 
-      value: "2.5M+", 
-      icon: Users,
+    {
+      label: "Rewards",
+      value: "Per task",
+      icon: CheckCircle,
       color: "from-purple-400 to-pink-400"
     },
-    { 
-      label: "Tasks Completed", 
-      value: "150M+", 
-      icon: CheckCircle,
+    {
+      label: "Funded by",
+      value: "Advertisers",
+      icon: Users,
       color: "from-blue-400 to-cyan-400"
     },
-    { 
-      label: "Paid Out", 
-      value: "$50M+", 
+    {
+      label: "Payout",
+      value: "In credits",
       icon: DollarSign,
       color: "from-green-400 to-emerald-400"
     },
-    { 
-      label: "Countries", 
-      value: "150+", 
+    {
+      label: "Access",
+      value: "Global",
       icon: Globe,
       color: "from-orange-400 to-red-400"
     }
@@ -72,13 +72,13 @@ const Index = () => {
     {
       icon: Shield,
       title: "Verified & Secure",
-      description: "All tasks verified. Payments guaranteed. Your data protected.",
+      description: "Tasks are reviewed and approved. Your data stays protected.",
       color: "from-blue-500 to-cyan-500"
     },
     {
       icon: Zap,
-      title: "Real-Time Payments",
-      description: "Get paid instantly upon task completion. No waiting periods.",
+      title: "Earn as You Go",
+      description: "Credits are added to your wallet once your task is approved.",
       color: "from-yellow-500 to-orange-500"
     },
     {
@@ -144,7 +144,7 @@ const Index = () => {
     <>
       <SeoMeta 
         title="SmartClicks - Earn Money Through Social Media"
-        description="Join the world's largest social earning platform. Complete tasks, earn rewards, and get paid instantly. Start earning today!"
+        description="Complete advertiser-funded social tasks and earn credits you can cash out. Transparent, capped rewards. Start today!"
         keywords={["social media tasks", "earn money online", "micro tasks", "social marketing", "remote work"]}
       />
       
@@ -217,7 +217,7 @@ const Index = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="status-online"></div>
-              <span className="text-foreground font-medium">2.5M+ users earning daily</span>
+              <span className="text-foreground font-medium">Advertiser-funded tasks, real rewards</span>
               <Sparkles className="w-5 h-5 text-primary" />
             </motion.div>
             
@@ -235,7 +235,7 @@ const Index = () => {
               </h1>
               
               <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto text-balance">
-                Complete verified tasks, engage with content, and get paid instantly. 
+                Complete advertiser-funded tasks, engage with content, and earn credits you can cash out.
                 Join the future of social earning.
               </p>
             </motion.div>
@@ -303,11 +303,11 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Zap className="w-5 h-5 text-warning" />
-                <span className="font-medium">Instant Payments</span>
+                <span className="font-medium">Cash-out in credits</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Star className="w-5 h-5 text-primary" />
-                <span className="font-medium">4.9/5 Rating</span>
+                <span className="font-medium">Transparent caps</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-5 h-5 text-accent" />
@@ -439,7 +439,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">Instant payments</span>
+                <span className="font-medium">Cash-out in credits</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />

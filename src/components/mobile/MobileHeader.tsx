@@ -216,7 +216,7 @@ export default function MobileHeader() {
                     variant="ghost"
                     className="w-full justify-start"
                     onClick={() => {
-                      navigate("/dashboard/settings");
+                      navigate("/dashboard/account");
                       setIsMenuOpen(false);
                     }}
                   >

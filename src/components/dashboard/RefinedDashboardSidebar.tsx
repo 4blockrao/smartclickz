@@ -49,7 +49,6 @@ const navigationGroups = [
     label: "Activities",
     items: [
       { label: "Tasks", to: "/tasks", icon: Target },
-      { label: "Activity History", to: "/dashboard/task-history", icon: BarChart3 },
     ],
   },
   {
@@ -57,7 +56,6 @@ const navigationGroups = [
     items: [
       { label: "Create Campaign", to: "/create-campaign", icon: Megaphone },
       { label: "Campaign Board", to: "/campaigns", icon: Target },
-      { label: "Analytics", to: "/dashboard/campaign-analytics", icon: BarChart3 },
     ],
   },
   {
@@ -65,16 +63,12 @@ const navigationGroups = [
     items: [
       { label: "Team & Referrals", to: "/referrals", icon: Users },
       { label: "Compensation Plan", to: "/plan", icon: Award },
-      { label: "Volume", to: "/dashboard/balanced-volume", icon: Calculator },
     ],
   },
   {
     label: "Rankings",
     items: [
       { label: "Leaderboard", to: "/leaderboard", icon: Trophy },
-      { label: "Rank Progress", to: "/dashboard/rank-progress", icon: Crown },
-      { label: "Royalty", to: "/dashboard/royalty", icon: Zap },
-      { label: "Leadership", to: "/dashboard/leadership", icon: Star },
     ],
   },
   {

@@ -25,9 +25,9 @@ export default function Footer() {
   ];
 
   const communityLinks = [
-    { label: "Forums", href: "/news" },
-    { label: "Discovery Calls", href: "/events" },
-    { label: "Success Stories", href: "/news" },
+    { label: "Compensation Plan", href: "/compensation" },
+    { label: "Help Center", href: "/help" },
+    { label: "Contact", href: "/contact" },
     { label: "Report Scam", href: "/contact", icon: Shield }
   ];
 
